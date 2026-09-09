@@ -38,8 +38,11 @@ spending it reading a repo kills the run halfway. **You dispatch, review and ban
 
 1. **Scout.** One session, read-only, writes `_scout.md` and nothing else.
    → [scout.md](references/scout.md)
-2. **Gate 1.** Present the plan. Stop and wait for a human. They correct what only they know: which
-   service is dead, which branch really ships, what the acronym means.
+2. **Gate 1.** Stop and wait for a human. Put seven decisions in front of them in one message, each
+   with your recommendation and the evidence for it, so they correct rather than compose: dead
+   units, true branch per unit, vocabulary conflicts, where the manual lives, depth per unit, who
+   reads it, which agent file to patch. Their answers go into `_goal.md`, which is the decision
+   record. → [run.md](references/run.md)
 3. **Bootstrap.** Create the skeleton, seed `_goal.md` and `_progress.md`, wire in `AGENTS.md`.
    → [bootstrap.md](references/bootstrap.md)
 4. **First unit.** `map` exactly one, alone. → [map.md](references/map.md)

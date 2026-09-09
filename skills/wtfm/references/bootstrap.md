@@ -154,7 +154,7 @@ written by the `wtfm` skill; write new ones with it rather than by hand.
 - Bootstrap writes structure, never content. Empty tables and headings are correct output here.
   A skeleton with invented rows is worse than an empty one, because the invention gets believed.
 - Seed `_progress.md` unit rows from `_scout.md`, all `—`. That list is what `run` consumes.
-- Seed `_goal.md` from what the human said at the scout gate. Where they did not say, write the
-  obvious default and mark it, so they can correct one line instead of writing the file.
+- Seed `_goal.md` from the seven gate-1 decisions, including the ones the human did not contest.
+  It is the decision record, and a decision nobody wrote down becomes a habit nobody can question.
 - If an `AGENTS.md` or `CLAUDE.md` already exists, insert the docs-first section and leave the rest
   untouched. Say in the report which file was edited and what was added.

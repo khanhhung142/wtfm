@@ -46,6 +46,80 @@ recon pass that works out the units, the true branch per unit, the truth sources
 **Bootstrap** creates the skeleton and wires it into `AGENTS.md`. Scout is not optional: everything
 downstream reads its output, and skipping it means every later doc guesses at which branch is real.
 
+## How it actually goes
+
+Three sessions, one command, two conversations. Nothing else is asked of you.
+
+### Session 1 — you type one thing
+
+```
+/wtfm run
+```
+
+It reads the repo without writing anything: manifests, build files, entry points, dependency edges,
+migrations, tests. Fifteen minutes later it stops and shows you what it found, then asks you to
+settle the things code cannot tell it:
+
+```
+Found 9 units. Before I write anything, 6 decisions:
+
+1. Dead or alive?      cs-legacy-sync last commit 14 months ago, nothing imports it.
+2. Which branch ships?  develop has 21 schema files, main has 1. Reading develop unless you say no.
+3. Same thing, two names? "account" in passport, "user" in cs-agent. One concept or two?
+4. Where do docs live?  9 repos, so a sibling folder + a symlink into each. Or in-repo, your call.
+5. How deep per unit?   Full for the 3 in the request path, sketch for the other 6.
+6. Who reads this?      Agents only, or humans too? Changes whether I write explainers.
+```
+
+You answer in a paragraph. It writes your answers into `_goal.md`, builds the skeleton, creates the
+symlinks, patches `AGENTS.md`, then documents **one** unit and stops again:
+
+```
+cs-chat-rpc documented: 7 files, 36 endpoints (28 ✅ / 8 📋), 4 open questions.
+Read it as a template, not for correctness. What is missing that the next 8 will also miss?
+```
+
+That second pause is the one that matters. Whatever is wrong with this unit is about to be repeated
+eight more times, and this is the last cheap moment to say so.
+
+### Session 2 — you type the same thing
+
+```
+/wtfm run
+```
+
+It reads `_goal.md` and `_progress.md`, sees the first unit is done and eight are not, and starts
+dispatching. Four subagents at a time, each with a clean context, each writing only inside its own
+folder. It banks each result as it lands and commits after each wave.
+
+You are not needed. Go do something else.
+
+### Session 3 — you type the same thing again
+
+Because session 2 ran out of context somewhere in wave two. That is expected and it is fine.
+
+`/wtfm run` reads the ledger, finds the three rows still marked `🔄`, checks each against what is
+actually on disk, and carries on from there. It tells you what it found:
+
+```
+Resumed. 3 rows were mid-flight: cs-visitor-rpc had nothing on disk (redispatched),
+cs-job-rpc was half written (extended), sequence-rpc was complete but unbanked (checked and banked).
+Wave 3 of 5 now out.
+```
+
+There is no resume command. It is the same command every time, because the ledger holds the position.
+
+### Then
+
+When the ledger is empty, you have a manual. From that point every agent that opens the repo reads
+`AGENTS.md`, which now points at it, and stops re-deriving the codebase from scratch every session.
+
+Months later, when it has drifted:
+
+```
+/wtfm verify
+```
+
 ## What it produces
 
 ```

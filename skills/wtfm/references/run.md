@@ -12,6 +12,19 @@ finding things to document until the budget is gone.
 ````markdown
 # Goal
 
+## Decisions
+Settled at gate 1, on <date>. Change a row and the next wave follows it.
+
+| # | Decision | Answer |
+|---|----------|--------|
+| 1 | Dead units | |
+| 2 | True branch, per unit | |
+| 3 | Vocabulary conflicts resolved | |
+| 4 | Manual location | |
+| 5 | Depth per unit | |
+| 6 | Audience | |
+| 7 | Agent file patched | |
+
 ## Objective
 One or two lines. What this manual is for, and who reads it.
 
@@ -56,15 +69,26 @@ repeated across the rest.
 
 Do not infer approval from silence. Stop and wait.
 
-**Gate 1, after scout.** Present: units found, branch per unit with the evidence, truth sources,
-proposed wave order, target count. Ask for the four things code cannot answer.
+**Gate 1, after scout.** Seven decisions, and they are the whole gate. Ask all seven at once, in
+one message, each with your recommendation already filled in so the human corrects rather than
+composes. A gate that asks open questions gets a shrug; a gate that proposes answers gets edits.
 
-```
-Before I start: which of these units are dead or about to be deleted, which branch really ships
-for each, are any of these two names the same concept, and what should the manual be for?
-```
+| # | Decision | Propose | They alone know |
+|---|----------|---------|-----------------|
+| 1 | Which units are dead | Anything with no recent commits and no inbound imports | Whether it still runs in production |
+| 2 | Which branch is true, per unit | The one with more of the files that matter, with the counts shown | Which one actually deploys |
+| 3 | Vocabulary conflicts | Every case of one name covering two concepts, or two names covering one | Which meaning owns the word |
+| 4 | Where the manual lives | In-repo for one repo; a sibling folder plus symlinks for several | Whether the docs may be committed |
+| 5 | Depth per unit | Full for units on the request path, sketch for the rest | Which units they are about to work in |
+| 6 | Who reads it | Agents only unless they say otherwise | Whether anyone is being onboarded |
+| 7 | Which agent file to patch | The one that exists, extended not replaced | Whether it is shared with a team |
 
-Turn the answers into `_goal.md` before bootstrapping.
+Present the evidence for each, not just the proposal. "develop has 21 schema files, main has 1" lets
+them correct you in four words. "I will read develop" does not.
+
+Write every answer into `_goal.md` before bootstrapping, including the ones they did not contest.
+That file is the decision record: a later session must be able to see that reading `develop` was a
+decision somebody made, not a habit that crept in.
 
 **Gate 2, after the first unit.** Present the docs as a template, not as content.
 
