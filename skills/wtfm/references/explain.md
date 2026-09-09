@@ -1,6 +1,6 @@
 # Mode: explain — teach a human → `explain/<topic>.md`
 
-The only artifact in the atlas written for a person. Everything else optimises for an agent that
+The only artifact in the manual written for a person. Everything else optimises for an agent that
 can afford to be told facts in a table. A person cannot start from a table, because they have no
 place to put the facts yet.
 

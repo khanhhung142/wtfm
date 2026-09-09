@@ -61,7 +61,7 @@ flowchart LR
 ```
 
 Stores use `[(…)]`, queues use `[[…]]`, services use `[…]`. Keeping the shapes consistent across
-every diagram in the atlas means a reader learns the notation once.
+every diagram in the manual means a reader learns the notation once.
 
 ## State
 

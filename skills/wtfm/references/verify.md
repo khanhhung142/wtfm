@@ -1,10 +1,10 @@
-# Mode: verify — does the atlas still match the code
+# Mode: verify — does the manual still match the code
 
 Documentation rots quietly. Nothing in a repository fails when a doc goes wrong, so the only signal
 is a deliberate check. This mode produces that signal, and produces nothing else: it reports and
 updates the ledger. Fixing is a `map` or `flow` session against the findings.
 
-Run it after a merge that touched a documented unit, before trusting the atlas for a large piece of
+Run it after a merge that touched a documented unit, before trusting the manual for a large piece of
 work, and on a schedule if the project is moving fast.
 
 ## Method

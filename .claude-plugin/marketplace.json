@@ -1,16 +1,16 @@
 {
-  "name": "ariadne",
+  "name": "wtfm",
   "owner": {
     "name": "hung.phan"
   },
   "metadata": {
-    "description": "Documentation skills for agents landing in an unfamiliar codebase."
+    "description": "Write The Fine Manual — documentation skills for agents landing in an unfamiliar codebase."
   },
   "plugins": [
     {
-      "name": "ariadne",
+      "name": "wtfm",
       "source": "./",
-      "description": "Read an unfamiliar codebase in stages and turn it into an atlas of chunked, indexed, citation-backed docs, with diagrams and human explainers. Self-driving via subagents."
+      "description": "You cannot RTFM when there is no FM. Reads an unfamiliar codebase in stages and writes the manual: chunked, indexed, citation-backed docs, diagrams and human explainers. Self-driving via subagents, resumable after a dead session."
     }
   ]
 }

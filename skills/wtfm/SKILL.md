@@ -1,16 +1,17 @@
 ---
-name: ariadne
-description: Read an unfamiliar codebase in stages and lay down an atlas — chunked, indexed, citation-backed documentation another agent can navigate, plus diagrams and a plain-language explainer for humans, plus an AGENTS.md that makes future agents read it first. Runs itself: one command fans the work out across subagents and drives it to completion from a ledger. Use when landing in a new or undocumented project, documenting a repo or service, tracing a cross-service flow, explaining how a system works, drawing architecture or sequence diagrams, setting up a docs vault, or checking whether existing docs still match the code. Trigger words: onboard, document this project, write docs for agents, code map, architecture diagram, explain this system, docs vault, docs-first.
+name: wtfm
+description: Write The Fine Manual. Read an unfamiliar codebase in stages and write documentation another agent can navigate — chunked, indexed, every claim carrying a file:line citation — plus diagrams, plain-language explainers for humans, and an AGENTS.md that makes future agents read it first. Runs itself from a goal and a ledger, fanning work out across subagents, and resumes where it stopped when a session dies. Use when landing in a new or undocumented project, documenting a repo or service, tracing a cross-service flow, explaining how a system works, drawing architecture or sequence diagrams, setting up a docs vault, resuming a half-finished documentation run, or checking whether existing docs still match the code. Trigger words: onboard, document this project, write docs for agents, code map, architecture diagram, explain this system, docs vault, docs-first, RTFM.
 ---
 
-# ariadne
+# wtfm — Write The Fine Manual
 
-Theseus did not memorise the labyrinth. He laid a thread.
+You cannot RTFM when there is no FM. This skill writes it.
 
-This skill turns a codebase nobody has documented into an **atlas**: many small files, each
-answering one question, reachable through a router index, every claim carrying a line citation. It
-is written for an agent that arrives later with no context and a budget of three file reads.
-Optimise for that reader. Humans are served by `explain`, a different artifact with different rules.
+Point it at a codebase nobody has documented and it produces a **manual**: many small files, each
+answering one question, reachable through a router index, every claim carrying a line citation. The
+reader it is written for is an agent that arrives next week with no context and a budget of three
+file reads. Optimise for that reader. Humans are served by `explain`, which is a different artifact
+with different rules.
 
 **Documentation is crystallised thinking, not a place to think.** Work the code out first, then
 write. A doc that reasons on the page is a draft that escaped.
@@ -21,9 +22,10 @@ write. A doc that reasons on the page is a draft that escaped.
 
 | Mode | Does | Output | Reference |
 |------|------|--------|-----------|
-| `run` | **Drives every other mode to completion.** Default | the whole atlas | [references/run.md](references/run.md) |
+| `run` | **Drives every other mode to completion.** Default | the whole manual | [references/run.md](references/run.md) |
+| `goal` | Write or change the objective the run works toward | `_goal.md` | [references/run.md](references/run.md) |
 | `scout` | Recon. Learn the project, propose a plan | `_scout.md` only | [references/scout.md](references/scout.md) |
-| `bootstrap` | Create the atlas, wire it into the repos | skeleton + `AGENTS.md` patch | [references/bootstrap.md](references/bootstrap.md) |
+| `bootstrap` | Create the manual, wire it into the repos | skeleton + `AGENTS.md` patch | [references/bootstrap.md](references/bootstrap.md) |
 | `map <unit>` | Document one repo, service or package | `services/<unit>/` | [references/map.md](references/map.md) |
 | `flow <name>` | Trace one request end to end | `flows/<name>.md` | [references/flow.md](references/flow.md) |
 | `explain <topic>` | Teach a human how something works | `explain/<topic>.md` | [references/explain.md](references/explain.md) |
@@ -37,22 +39,64 @@ and `explain`.
 ## The loop
 
 The reason a docs project stalls is that a human has to think of the next prompt thirty times. They
-do not. `run` reads the ledger, picks the next target, dispatches it, banks the result and repeats.
+do not. `run` reads the goal and the ledger, picks the next target, dispatches it, banks the result
+and repeats until the goal is met.
+
+Three files at the manual root hold everything the loop needs, split by who owns them:
+
+| File | Holds | Owner | Changes |
+|------|-------|-------|---------|
+| `_goal.md` | The objective, the scope, the definition of done | the human | rarely |
+| `_scout.md` | What the project is: units, branches, truth sources, vocabulary | scout | once |
+| `_progress.md` | Where the work has got to. The ledger | the run | every target |
+
+Keeping the goal out of the ledger is what lets the human steer without interrupting. Edit
+`_goal.md` between waves to drop a unit, stop before flows, or change the definition of done, and
+the next wave picks it up. A goal folded into the ledger gets rewritten by every status update.
 
 Each target gets a **fresh subagent**, because context exhaustion, not difficulty, is what makes the
 second unit in a session shallower than the first. Fanning out is not an optimisation here; it is
 the only way the tenth unit gets the same quality as the first.
 
-Three rules keep a fan-out from corrupting the atlas:
+Four rules keep a fan-out from corrupting the manual:
 
 1. **A subagent writes only inside its own target's folder.** Never the root index, never another
    unit's files.
 2. **A subagent never writes the ledger.** It returns a report. The parent, which is the only writer,
    banks it. Parallel writers to one ledger lose rows.
-3. **The parent updates the root index and the ledger after each wave**, then starts the next.
+3. **The parent banks each report the moment it lands**, not at the end of the wave. Whatever is
+   unbanked when the session dies is lost, so the window stays as small as the work allows.
+4. **A target is claimed in the ledger before it is dispatched**, marked `🔄` with its wave number.
+   A claim written after the fact is a claim that does not survive the crash it exists for.
 
 Humans gate twice: on the scout plan, and on the first completed unit, which is where a template
 flaw is cheap to fix and after which it is repeated sixty times. Everything else runs unattended.
+
+### Surviving a dead session
+
+Sessions end mid-run. Context fills, credit runs out, a laptop closes. The manual is designed so
+that the next invocation picks up where the last one stopped, and the mechanism is the ledger rather
+than anything clever.
+
+**Resuming is the same command.** `wtfm run` in a fresh session reads `_goal.md` and `_progress.md`,
+finds the earliest incomplete wave and continues. There is no resume verb and no run-state file
+beyond the ledger, because a second state file is a second thing that can disagree with reality.
+
+**A `🔄` row is a crash survivor**, not work in progress: nothing is running any more. Resolve each
+one against the filesystem before dispatching anything new.
+
+| On disk | Meaning | Do |
+|---|---|---|
+| Folder missing | Died before it wrote | Dispatch fresh |
+| Folder partial | Died mid-write | Dispatch with instructions to extend, not rewrite |
+| Folder looks complete | Died after writing, before banking | Spot-check one citation, then bank it |
+
+Never promote a `🔄` row to done on the strength of its folder existing. It was never reviewed, and
+an unreviewed target that looks finished is exactly what the status tags exist to catch.
+
+**Commit the manual after each wave** when it lives in a git repo. One commit per wave gives a real
+restore point and makes the run auditable afterwards. It costs a command and saves the argument
+about what was written when.
 
 ## The rules every mode obeys
 
@@ -61,7 +105,7 @@ flaw is cheap to fix and after which it is repeated sixty times. Everything else
 Every technical claim names `path/file.ext:LINE`, repo-relative. A claim you could not trace to a
 line does not go in the doc. It goes in that doc's `## Open questions`.
 
-This rule is what makes the atlas worth more than the next model's guess. An agent that reads a
+This rule is what makes the manual worth more than the next model's guess. An agent that reads a
 citation can confirm it in one read. An uncited paragraph is worth nothing, because re-deriving the
 fact costs exactly what it cost before the doc existed.
 
@@ -106,14 +150,14 @@ done
 
 Then count the files that carry meaning for this project — schema directory, interface definitions,
 route table — on each candidate. A branch holding one schema file where another holds twenty-one is
-not a stylistic difference, and reading the wrong one produces an atlas that is confidently, fully
+not a stylistic difference, and reading the wrong one produces a manual that is confidently, fully
 wrong. Record branch and commit in every doc's frontmatter. Units may be true on different branches;
 say so per unit rather than forcing one global answer.
 
 ### 5. Spec and code disagreeing is a finding
 
 When a written spec contradicts the code, record both and name the contradiction. Never silently
-pick whichever makes a tidier doc. That sentence is usually the most valuable one in the atlas.
+pick whichever makes a tidier doc. That sentence is usually the most valuable one in the manual.
 
 ### 6. One fact, one place
 
@@ -146,7 +190,7 @@ status: ✅ | 🟡 | 📋
 
 ### 8. The ledger is the handoff
 
-A codebase outgrows any context window. `_progress.md` at the atlas root holds the state of the
+A codebase outgrows any context window. `_progress.md` at the manual root holds the state of the
 work and is the only thing that survives between sessions and between subagents.
 
 - **Start:** read `_progress.md`. Never re-document a target marked done; extend it.

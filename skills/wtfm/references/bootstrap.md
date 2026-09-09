@@ -1,24 +1,24 @@
-# Mode: bootstrap — create the atlas and wire it in
+# Mode: bootstrap — create the manual and wire it in
 
 Runs once, after the scout gate. Creates the skeleton, connects it to the repos, and edits the
-agent instructions so that every future agent reads the atlas before it reads code.
+agent instructions so that every future agent reads the manual before it reads code.
 
-## Where the atlas lives
+## Where the manual lives
 
 Two layouts. `scout` proposes one; this mode builds it.
 
-**Single repo:** `docs/atlas/` inside the repo, committed with the code. Docs and code move
+**Single repo:** `docs/manual/` inside the repo, committed with the code. Docs and code move
 together, and a pull request can change both. Prefer this whenever there is one repo.
 
-**Several repos in a workspace:** a sibling directory, `<workspace>/<project>-atlas/`, its own git
+**Several repos in a workspace:** a sibling directory, `<workspace>/<project>-manual/`, its own git
 repo. Docs about six services belong to none of them, and a doc that must be committed six times is
 a doc that will be committed once and rot in five.
 
-Each repo then gets a symlink to its own slice, not to the whole atlas, so an agent working in one
+Each repo then gets a symlink to its own slice, not to the whole manual, so an agent working in one
 repo sees that repo's docs at a predictable path:
 
 ```bash
-ln -s ../<project>-atlas/services/<repo> <repo>/docs
+ln -s ../<project>-manual/services/<repo> <repo>/docs
 ```
 
 Keep the link out of that repo's history without touching a tracked file:
@@ -34,8 +34,9 @@ eventually gets committed by accident.
 ## Skeleton
 
 ```
-<atlas>/
+<manual>/
 ├── index.md          # router: need → path. Under 200 lines, forever
+├── _goal.md          # objective, scope, definition of done. The human owns this
 ├── _scout.md         # written by scout; the truth-source table lives here
 ├── _progress.md      # the ledger
 ├── services/<unit>/  # one folder per unit, each with its own index.md
@@ -52,12 +53,13 @@ its unit costs every future agent one lookup, forever.
 The router. It is read on every session by every agent, so it stays a table.
 
 ````markdown
-# <project> atlas
+# <project> manual
 
-**Agents: read this file first.** Written by the `ariadne` skill. Open only what the task needs.
+**Agents: read this file first.** Written by the `wtfm` skill. Open only what the task needs.
 
 | Need | Path |
 |------|------|
+| What this manual is for, and when it is done | [_goal.md](_goal.md) |
 | What is already documented, what is next | [_progress.md](_progress.md) |
 | Units, branches, truth sources, vocabulary | [_scout.md](_scout.md) |
 | One unit's internals | `services/<unit>/index.md` |
@@ -86,17 +88,22 @@ The router. It is read on every session by every agent, so it stays a table.
 
 **Read first, update last.** No session holds the whole project. This file is the handoff.
 
-`—` not started · `🔄` in progress, say what is left · `✅` done · `⛔` blocked, say by what.
+`—` not started · `🔄` claimed · `✅` done · `⛔` blocked, say by what.
 Done means written **and** citations verified, not "the file exists".
 
+**A `🔄` you are reading is a crash survivor.** Nothing is running. Check the folder on disk and
+either dispatch it fresh, extend it, or spot-check and bank it.
+
 ## Now
+> Wave: <n> — <what it covers>
+> In flight: <targets claimed but not banked, or none>
 > Just landed: <one line>
 > Next: <one line>
 > Blocked on: <open question numbers, or none>
 
 ## Units
-| Unit | index | service | data | api | events | config | Branch @ commit | Notes |
-|------|-------|---------|------|-----|--------|--------|-----------------|-------|
+| Unit | Wave | index | service | data | api | events | config | Branch @ commit | Notes |
+|------|------|-------|---------|------|-----|--------|--------|-----------------|-------|
 
 ## Flows
 | Flow | Status | Units it crosses | Notes |
@@ -128,18 +135,18 @@ loaded on every turn of every session forever. Extend the existing file rather t
 
 Before coding, debugging, or answering an architecture question:
 
-1. Read `<atlas>/index.md`.
-2. Read `<atlas>/_progress.md` when you need current state or open questions.
-3. Open only what the task needs. Do not load the whole atlas into context.
+1. Read `<manual>/index.md`.
+2. Read `<manual>/_progress.md` when you need current state or open questions.
+3. Open only what the task needs. Do not load the whole manual into context.
 
 | Need | Path |
 |------|------|
-| One unit's internals | `<atlas>/services/<unit>/index.md` |
-| A request end to end | `<atlas>/flows/<name>.md` |
-| Why the code is like this | `<atlas>/decisions/` |
+| One unit's internals | `<manual>/services/<unit>/index.md` |
+| A request end to end | `<manual>/flows/<name>.md` |
+| Why the code is like this | `<manual>/decisions/` |
 
-Truth sources are listed in `<atlas>/_scout.md`. Cite `file:line` for technical claims. Docs are
-written by the `ariadne` skill; write new ones with it rather than by hand.
+Truth sources are listed in `<manual>/_scout.md`. Cite `file:line` for technical claims. Docs are
+written by the `wtfm` skill; write new ones with it rather than by hand.
 ````
 
 ## Rules
@@ -147,5 +154,7 @@ written by the `ariadne` skill; write new ones with it rather than by hand.
 - Bootstrap writes structure, never content. Empty tables and headings are correct output here.
   A skeleton with invented rows is worse than an empty one, because the invention gets believed.
 - Seed `_progress.md` unit rows from `_scout.md`, all `—`. That list is what `run` consumes.
+- Seed `_goal.md` from what the human said at the scout gate. Where they did not say, write the
+  obvious default and mark it, so they can correct one line instead of writing the file.
 - If an `AGENTS.md` or `CLAUDE.md` already exists, insert the docs-first section and leave the rest
   untouched. Say in the report which file was edited and what was added.

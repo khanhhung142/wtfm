@@ -1,11 +1,11 @@
 {
-  "name": "ariadne",
-  "description": "Land in an unfamiliar codebase and lay down an atlas: chunked, indexed, citation-backed docs another agent can navigate, diagrams, a plain-language explainer, and an AGENTS.md that makes future agents read it first. Runs itself across subagents from a ledger.",
+  "name": "wtfm",
+  "description": "Write The Fine Manual. Lands in an undocumented codebase and produces chunked, indexed, citation-backed docs another agent can navigate, plus diagrams, human explainers, and an AGENTS.md that makes future agents read them first. Self-driving: fans work out across subagents from a goal and a ledger, and resumes after a dead session.",
   "version": "0.1.0",
   "author": {
     "name": "hung.phan"
   },
-  "repository": "https://github.com/hungphan/ariadne",
+  "repository": "https://github.com/hungphan/wtfm",
   "license": "MIT",
-  "keywords": ["documentation", "onboarding", "codebase", "agents", "diagrams"]
+  "keywords": ["documentation", "onboarding", "codebase", "agents", "diagrams", "rtfm"]
 }

@@ -4,8 +4,8 @@ The first landing. Everything later modes assume gets decided here: which units 
 is true, what counts as a truth source, what the words mean. Every hour spent here is repaid by
 every subsequent doc; every guess made here is repeated in all of them.
 
-**Output is exactly one file: `_scout.md`.** No unit docs, no diagrams, no atlas skeleton. Scout
-ends at a human gate, and writing the atlas before the plan is approved wastes the gate.
+**Output is exactly one file: `_scout.md`.** No unit docs, no diagrams, no manual skeleton. Scout
+ends at a human gate, and writing the manual before the plan is approved wastes the gate.
 
 ## Read order
 
@@ -93,7 +93,7 @@ say which ones you actually ran.
 | Wave | Targets | Depends on |
 |---|---|---|
 
-Target count and the atlas location (see bootstrap: in-repo or sibling).
+Target count and the manual location (see bootstrap: in-repo or sibling).
 
 ## Open questions for the human
 Numbered. Only what the code cannot answer: which unit is dead, which branch really ships, which of
@@ -102,7 +102,7 @@ two names for one concept is correct, what the acronym stands for.
 
 ## Rules
 
-- **Read only.** Scout does not check out branches destructively, does not create the atlas, does
+- **Read only.** Scout does not check out branches destructively, does not create the manual, does
   not fix anything it finds.
 - **Do not read every file.** Scout answers "what is here and what is true", not "how does it work".
   Depth is `map`'s job, and a scout that reads deeply runs out of context before it reaches the

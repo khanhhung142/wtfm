@@ -44,7 +44,7 @@ and tables, dependencies in and out, status tag counts.
 
 ## The use-case table
 
-The most-read table in the atlas. One row per unit of behaviour.
+The most-read table in the manual. One row per unit of behaviour.
 
 | Use case | Endpoint | Entry | Does | Touches | Calls out | Status |
 |----------|----------|-------|------|---------|-----------|--------|
