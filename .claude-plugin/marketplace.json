@@ -1,0 +1,16 @@
+{
+  "name": "ariadne",
+  "owner": {
+    "name": "hung.phan"
+  },
+  "metadata": {
+    "description": "Documentation skills for agents landing in an unfamiliar codebase."
+  },
+  "plugins": [
+    {
+      "name": "ariadne",
+      "source": "./",
+      "description": "Read an unfamiliar codebase in stages and turn it into an atlas of chunked, indexed, citation-backed docs, with diagrams and human explainers. Self-driving via subagents."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "ariadne",
+  "description": "Land in an unfamiliar codebase and lay down an atlas: chunked, indexed, citation-backed docs another agent can navigate, diagrams, a plain-language explainer, and an AGENTS.md that makes future agents read it first. Runs itself across subagents from a ledger.",
+  "version": "0.1.0",
+  "author": {
+    "name": "hung.phan"
+  },
+  "repository": "https://github.com/hungphan/ariadne",
+  "license": "MIT",
+  "keywords": ["documentation", "onboarding", "codebase", "agents", "diagrams"]
+}
