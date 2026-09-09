@@ -1,4 +1,4 @@
-# Mode: flow — one request end to end → `flows/<name>.md`
+# Command: flow — one request end to end → `flows/<name>.md`
 
 For behaviour that crosses units: a login, a message send, a checkout, an export. This is the doc
 someone opens at 03:00 while the thing is broken. It has to let them follow one request from client

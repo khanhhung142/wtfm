@@ -1,4 +1,4 @@
-# Mode: verify — does the manual still match the code
+# Command: verify — does the manual still match the code
 
 Documentation rots quietly. Nothing in a repository fails when a doc goes wrong, so the only signal
 is a deliberate check. This mode produces that signal, and produces nothing else: it reports and

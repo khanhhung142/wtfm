@@ -31,18 +31,20 @@ Because you get a plausible essay. The three failures are always the same:
 which branch is true before reading a line. One file, one question. `index.md` is a router, never
 content.
 
-## Modes
+## What you type
 
-| Mode | Does |
-|------|------|
-| `run` | Drives all of the below to completion. The default |
-| `goal` | Write or change the objective the run works toward |
-| `scout` | Recon. Units, branches, truth sources, vocabulary, a plan. Writes one file |
-| `bootstrap` | Creates the manual, symlinks it into the repos, patches `AGENTS.md` |
-| `map <unit>` | Documents one repo, service or package |
-| `flow <name>` | Traces one request end to end, across units |
-| `explain <topic>` | A plain-language walkthrough for a human |
-| `verify` | Re-resolves every citation, reports what drifted |
+| Command | Does |
+|---------|------|
+| `/wtfm run` | Everything below, driven to completion. The one you want |
+| `/wtfm map <unit>` | Just this repo, service or package |
+| `/wtfm flow <name>` | Just this request, traced end to end across units |
+| `/wtfm explain <topic>` | A plain-language walkthrough for a human |
+| `/wtfm verify` | Re-resolve every citation, report what drifted |
+
+Two more stages exist, and `run` performs both. You never type them. **Scout** is the read-only
+recon pass that works out the units, the true branch per unit, the truth sources and the vocabulary.
+**Bootstrap** creates the skeleton and wires it into `AGENTS.md`. Scout is not optional: everything
+downstream reads its output, and skipping it means every later doc guesses at which branch is real.
 
 ## What it produces
 
@@ -64,7 +66,7 @@ symlink to its own slice, so the docs belong to no single repo and rot in none o
 ## Install
 
 ```
-/plugin marketplace add hungphan/wtfm
+/plugin marketplace add khanhhung142/wtfm
 /plugin install wtfm
 ```
 

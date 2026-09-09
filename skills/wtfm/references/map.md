@@ -1,4 +1,4 @@
-# Mode: map — one unit → `services/<unit>/`
+# Command: map — one unit → `services/<unit>/`
 
 The workhorse. One unit, one session, one folder. This is the doc an agent opens when it has been
 told to change something inside this unit and knows nothing about it.

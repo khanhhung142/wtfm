@@ -1,4 +1,4 @@
-# Mode: bootstrap — create the manual and wire it in
+# Stage: bootstrap — create the manual and wire it in
 
 Runs once, after the scout gate. Creates the skeleton, connects it to the repos, and edits the
 agent instructions so that every future agent reads the manual before it reads code.

@@ -1,4 +1,4 @@
-# Mode: scout — recon before anything is written
+# Stage: scout — recon before anything is written
 
 The first landing. Everything later modes assume gets decided here: which units exist, which branch
 is true, what counts as a truth source, what the words mean. Every hour spent here is repaid by
