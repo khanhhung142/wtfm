@@ -2,7 +2,8 @@
 
 You cannot RTFM when there is no FM.
 
-`wtfm` is a Claude Code skill that walks into a codebase nobody has documented and writes the
+`wtfm` is an agent skill — plain `SKILL.md`, no runtime, works anywhere skills are read — that
+walks into a codebase nobody has documented and writes the
 manual: many small files, each answering one question, reachable through a router index, every claim
 carrying a `file:line` citation. The reader it is written for is the agent that arrives next week
 with no context and a budget of three file reads.
@@ -61,21 +62,24 @@ migrations, tests. Fifteen minutes later it stops and shows you what it found, t
 settle the things code cannot tell it:
 
 ```
-Found 9 units. Before I write anything, 6 decisions:
+Found 9 units. Before I write anything, 7 decisions:
 
-1. Dead or alive?      cs-legacy-sync last commit 14 months ago, nothing imports it.
-2. Which branch ships?  develop has 21 schema files, main has 1. Reading develop unless you say no.
-3. Same thing, two names? "account" in passport, "user" in cs-agent. One concept or two?
+1. Dead or alive?       legacy-sync last commit 14 months ago, nothing imports it.
+2. Which branch?        develop has 21 schema files, main has 1. Looks stable — switch to it
+                        yourself, or say the word and I will. I have not run any checkout.
+3. Same thing, twice?   "account" in auth-api, "user" in billing-api. One concept or two?
 4. Where do docs live?  9 repos, so a sibling folder + a symlink into each. Or in-repo, your call.
+                        May I commit the manual, or leave it uncommitted?
 5. How deep per unit?   Full for the 3 in the request path, sketch for the other 6.
 6. Who reads this?      Agents only, or humans too? Changes whether I write explainers.
+7. Which agent file?    AGENTS.md exists — I extend it rather than replace it.
 ```
 
 You answer in a paragraph. It writes your answers into `_goal.md`, builds the skeleton, creates the
 symlinks, patches `AGENTS.md`, then documents **one** unit and stops again:
 
 ```
-cs-chat-rpc documented: 7 files, 36 endpoints (28 ✅ / 8 📋), 4 open questions.
+chat-api documented: 7 files, 36 endpoints (28 ✅ / 8 📋), 4 open questions.
 Read it as a template, not for correctness. What is missing that the next 8 will also miss?
 ```
 
@@ -102,8 +106,8 @@ Because session 2 ran out of context somewhere in wave two. That is expected and
 actually on disk, and carries on from there. It tells you what it found:
 
 ```
-Resumed. 3 rows were mid-flight: cs-visitor-rpc had nothing on disk (redispatched),
-cs-job-rpc was half written (extended), sequence-rpc was complete but unbanked (checked and banked).
+Resumed. 3 rows were mid-flight: visitor-api had nothing on disk (redispatched),
+job-runner was half written (extended), search-api was complete but unbanked (checked and banked).
 Wave 3 of 5 now out.
 ```
 
@@ -139,12 +143,32 @@ symlink to its own slice, so the docs belong to no single repo and rot in none o
 
 ## Install
 
+Any agent that reads the [Agent Skills](https://agentskills.io) format:
+
+```
+npx skills add khanhhung142/wtfm
+```
+
+Installs into whatever the tool in front of you expects — `.claude/skills/`, `.agents/skills/`,
+`.codex/skills/`, `~/.cursor/skills/`. Add `--agent <name>` to pick one, `--list` to look first.
+
+<details>
+<summary>Other ways</summary>
+
+**Claude Code plugin** — adds the `/wtfm` command:
+
 ```
 /plugin marketplace add khanhhung142/wtfm
 /plugin install wtfm
 ```
 
-Or copy `skills/wtfm/` into `~/.claude/skills/`.
+**By hand** — copy `skills/wtfm/` into your agent's skills directory.
+
+**Claude apps** — zip `skills/wtfm/`, upload at Settings → Capabilities → Skills.
+
+</details>
+
+No slash command? Just say it: *"use the wtfm skill, run"*.
 
 ## The parts that matter
 
@@ -173,9 +197,8 @@ claiming everything works, which is a claim nobody checked.
 
 ## Prior art
 
-Distilled from a hand-built documentation vault covering nine services across eight release phases,
-and the project-specific skill that produced it. This is that skill with the project taken out and
-thirty copy-pasted prompts replaced by a loop.
+Nine services, eight release phases, one human pasting the same prompt thirty times. Never again.
+This is that vault's skill with the project scraped off and the thirty prompts replaced by a loop.
 
 ## License
 

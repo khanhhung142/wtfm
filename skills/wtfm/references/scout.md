@@ -31,11 +31,13 @@ Cheap and broad first. Stop expanding a branch as soon as it stops answering a q
    last-modified date against the code's, because a doc older than the code it describes is a
    hypothesis.
 
-## Branch, resolved not assumed
+## Branch, evidenced not assumed
 
-Follow SKILL.md rule 4 for every unit, and record the result per unit in the table. When candidates
-disagree, count the files that matter and put the counts in `_scout.md`. A one-line note saying
-`develop has 21 schema files, main has 1` is what stops the next agent from repeating the mistake.
+Follow the two git rules in SKILL.md for every unit: gather read-only, never switch, and record the
+result per unit in the table. When candidates disagree, count the files that matter with
+`git ls-tree` against each candidate — no checkout, no fetch — and put the counts in `_scout.md`. A
+one-line note saying `develop has 21 schema files, main has 1` is what stops the next agent from
+repeating the mistake. Scout proposes; gate 1 decides which branch is stable and who switches.
 
 ## The vocabulary pass
 
@@ -102,8 +104,9 @@ two names for one concept is correct, what the acronym stands for.
 
 ## Rules
 
-- **Read only.** Scout does not check out branches destructively, does not create the manual, does
-  not fix anything it finds.
+- **Read only, git included.** Scout runs no `fetch`, no `checkout`, no `switch`, no `commit` — see
+  SKILL.md. It does not create the manual and does not fix anything it finds. Whatever branch the
+  tree is on is the branch scout reads; the record says which one that was.
 - **Do not read every file.** Scout answers "what is here and what is true", not "how does it work".
   Depth is `map`'s job, and a scout that reads deeply runs out of context before it reaches the
   last unit.

@@ -18,7 +18,7 @@ Settled at gate 1, on <date>. Change a row and the next wave follows it.
 | # | Decision | Answer |
 |---|----------|--------|
 | 1 | Dead units | |
-| 2 | True branch, per unit | |
+| 2 | Stable branch, per unit, and who switches to it | |
 | 3 | Vocabulary conflicts resolved | |
 | 4 | Manual location | |
 | 5 | Depth per unit | |
@@ -44,6 +44,7 @@ Set per unit where they differ. Most projects have three units that matter and n
 
 ## Done when
 Checkable conditions, not adjectives.
+- [ ] `system.md` names the stack, the layers and the conventions, each cited
 - [ ] Every in-scope unit has an index and a use-case table
 - [ ] Every in-scope flow traces end to end with no unverified hop
 - [ ] `verify` reports zero Wrong findings
@@ -65,6 +66,9 @@ their work, and reviewing eight reports properly costs more context than reading
 The first `map` is deliberately alone. It is the template, and every flaw in it is about to be
 repeated across the rest.
 
+`system` is alone too, and comes before it. It is one session for the whole repo — stack, layers,
+conventions — and every subagent after it is handed those instead of inventing its own set.
+
 ## What to say at the gates
 
 Do not infer approval from silence. Stop and wait.
@@ -76,15 +80,21 @@ composes. A gate that asks open questions gets a shrug; a gate that proposes ans
 | # | Decision | Propose | They alone know |
 |---|----------|---------|-----------------|
 | 1 | Which units are dead | Anything with no recent commits and no inbound imports | Whether it still runs in production |
-| 2 | Which branch is true, per unit | The one with more of the files that matter, with the counts shown | Which one actually deploys |
+| 2 | Which branch is stable, per unit, and whether you may switch to it or they will | The one with more of the files that matter, with the counts shown, and no checkout run yet | Which one actually deploys, and what is uncommitted in their tree |
 | 3 | Vocabulary conflicts | Every case of one name covering two concepts, or two names covering one | Which meaning owns the word |
-| 4 | Where the manual lives | In-repo for one repo; a sibling folder plus symlinks for several | Whether the docs may be committed |
+| 4 | Where the manual lives, and whether you may `git commit` it | In-repo for one repo; a sibling folder plus symlinks for several; ask outright for commit permission | Whether the docs may be committed at all |
 | 5 | Depth per unit | Full for units on the request path, sketch for the rest | Which units they are about to work in |
 | 6 | Who reads it | Agents only unless they say otherwise | Whether anyone is being onboarded |
 | 7 | Which agent file to patch | The one that exists, extended not replaced | Whether it is shared with a team |
 
 Present the evidence for each, not just the proposal. "develop has 21 schema files, main has 1" lets
 them correct you in four words. "I will read develop" does not.
+
+Decision 2 is the only one where getting on with it costs the human something. Phrase it as a
+branch question plus a switching offer — "develop looks stable: 21 schema files against main's 1.
+Switch to it yourself, or say the word and I will run `git switch develop` in <repo>?" — and until
+they pick, read the branch already checked out. Never run the checkout on the strength of your own
+recommendation.
 
 Write every answer into `_goal.md` before bootstrapping, including the ones they did not contest.
 That file is the decision record: a later session must be able to see that reading `develop` was a

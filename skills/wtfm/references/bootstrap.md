@@ -29,13 +29,15 @@ echo 'docs' >> <repo>/.git/info/exclude
 
 `.git/info/exclude` is local and untracked. Editing the repo's `.gitignore` instead leaves a
 permanent modification in the working tree of every repo, which shows up in every `git status` and
-eventually gets committed by accident.
+eventually gets committed by accident. Even this one is a write inside their `.git`, so run it
+only once decision 4 at gate 1 has put the manual in that repo.
 
 ## Skeleton
 
 ```
 <manual>/
 ├── index.md          # router: need → path. Under 200 lines, forever
+├── system.md         # stack, shape, layers, conventions. The whole repo, above any unit
 ├── _goal.md          # objective, scope, definition of done. The human owns this
 ├── _scout.md         # written by scout; the truth-source table lives here
 ├── _progress.md      # the ledger
@@ -62,6 +64,7 @@ The router. It is read on every session by every agent, so it stays a table.
 | What this manual is for, and when it is done | [_goal.md](_goal.md) |
 | What is already documented, what is next | [_progress.md](_progress.md) |
 | Units, branches, truth sources, vocabulary | [_scout.md](_scout.md) |
+| Stack, layers, conventions of this repo | [system.md](system.md) |
 | One unit's internals | `services/<unit>/index.md` |
 | A request end to end | `flows/<name>.md` |
 | Plain-language walkthrough | `explain/<topic>.md` |
@@ -79,6 +82,7 @@ The router. It is read on every session by every agent, so it stays a table.
 1. Cite `file:line` for every technical claim.
 2. Truth sources are in [_scout.md](_scout.md). Generated output is not documentation input.
 3. Never copy a table between docs. Link it.
+4. Conventions and layer names live in [system.md](system.md). Follow it, or record a divergence.
 ````
 
 ## `_progress.md`
@@ -100,6 +104,11 @@ either dispatch it fresh, extend it, or spot-check and bank it.
 > Just landed: <one line>
 > Next: <one line>
 > Blocked on: <open question numbers, or none>
+
+## Root docs
+| Doc | Status | Notes |
+|-----|--------|-------|
+| system.md | — | |
 
 ## Units
 | Unit | Wave | index | service | data | api | events | config | Branch @ commit | Notes |

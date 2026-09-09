@@ -8,6 +8,9 @@ told to change something inside this unit and knows nothing about it.
 Do not reorder. Each step tells you what to look for in the next, and reading logic before schema
 means reading logic without knowing what the nouns are.
 
+0. **`system.md`.** The layers and conventions this repo already follows. Read it before the code so
+   you name things the way the rest of the manual does, and record a divergence when this unit
+   disagrees rather than inventing a second vocabulary.
 1. **Manifest and build files.** Language, framework versions, codegen commands, what is generated.
 2. **Truth sources for this unit** (from `_scout.md`): interface or schema definitions. This is the
    unit's contract with everyone else, and the contract is the spine of the doc.
@@ -31,7 +34,7 @@ unit has that surface, and skip it when it does not.
 | File | Contents |
 |------|----------|
 | `index.md` | Router for this unit, plus the quick-facts table. Written first, updated last |
-| `service.md` | Purpose, what it owns, stack and versions, what is generated versus hand-written |
+| `service.md` | Purpose, what it owns, stack and versions, what is generated versus hand-written. Repo-wide versions and conventions are in `system.md`: link, do not repeat |
 | `architecture.md` | Startup sequence, dependencies, middleware chain, stores. One component diagram |
 | `layers.md` | The request path, and the use-case table below. The unit's code index |
 | `data.md` | One row per table or collection: purpose, key fields, indexes, relations, soft-delete and tenancy behaviour |
