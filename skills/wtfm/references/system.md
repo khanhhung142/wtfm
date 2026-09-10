@@ -1,6 +1,7 @@
-# Command: system — the whole repo → `system.md`
+# Command: system — the whole repo → `system.md` + `glossary.md`
 
-One file at the root of the manual, above every unit. It answers what a unit doc cannot: what the
+Two files at the root of the manual, above every unit, written in the same session because they come
+out of the same reading. It answers what a unit doc cannot: what the
 stack is, what shape the code is in, what this project's layer names actually mean, and which rules
 hold in every unit. Written once, early, and read by every later session.
 
@@ -21,7 +22,7 @@ Re-run it only when a convention changes, not per wave.
 ## Read order
 
 1. **`_scout.md`.** Units, edges, truth sources, vocabulary. Do not re-derive any of it.
-2. **Manifests and lockfiles**, every unit. Stack and versions, pinned at a `file:line`.
+2. **Manifests and lockfiles**, every unit. Stack and versions, pinned at a `file:line anchor`.
 3. **Tooling config.** Linter, formatter, type checker, CI workflow, pre-commit, editorconfig. This
    is the only place a convention is enforced rather than merely believed.
 4. **Two units' entry points**, the most and least typical. Layer names are read out of directory
@@ -65,7 +66,7 @@ is about to break.
 | Rule | Example | Enforced by |
 |------|---------|-------------|
 Naming, file layout, error handling, logging, config access, test location and naming, migrations,
-commits. `Enforced by` is a linter rule at `file:line`, a CI step, or `nothing`.
+commits. `Enforced by` is a linter rule at `file:line anchor`, a CI step, or `nothing`.
 
 ## Cross-cutting
 One short section each, only for what exists: configuration, errors, auth, logging, migrations,
@@ -76,6 +77,43 @@ Where the code breaks its own rules, cited. Which side is the mistake, or `unkno
 
 ## Open questions
 ````
+
+## `glossary.md`
+
+The other thing code cannot say. A reader can see that the codebase has a type called `Order`. What
+no file states is that an `Order` here is unpaid until a `Payment` attaches, that the thing the
+warehouse calls an order is a `Shipment`, and that `order_id` on the legacy table means something
+else entirely. Every one of those is a bug an agent is about to write.
+
+Source it from the `_scout.md` vocabulary pass — the terms are already collected there. This file is
+where they become readable by everyone instead of buried in a run artifact.
+
+````markdown
+---
+unit: <project>
+branch: <branch>
+commit: <sha>
+written: <YYYY-MM-DD>
+---
+
+# <project> — glossary
+
+| Term | Means here | Does **not** mean | Defined at | Words the project avoids |
+|------|-----------|-------------------|------------|--------------------------|
+| Order | A basket that has been submitted; unpaid until a Payment attaches | The warehouse's meaning — that is a Shipment | `internal/order/order.go:18 Order` | purchase, cart |
+
+## Collisions
+One word, two concepts. Name both, name which owns the word, and cite the loser so the next agent
+recognises it on sight. This is the section that prevents cross-unit bugs.
+
+## Aliases
+One concept, several words, usually at a seam between two teams. Give the canonical word and list
+what to read the others as.
+````
+
+**Only terms whose meaning is not obvious from the word.** A glossary that defines `User` teaches
+nothing and buries the three rows that matter. The `Does not mean` column is where the value is: it
+is the misreading somebody has already made.
 
 ## Rules
 
@@ -88,5 +126,8 @@ Where the code breaks its own rules, cited. Which side is the mistake, or `unkno
   says `handler`, even when the textbook word is `controller`.
 - **No unit specifics.** Anything true of one unit only belongs in that unit's folder. When it turns
   out two units disagree, that is a `Divergences` row, not a paragraph here.
+- **A glossary row is cited like any other claim.** A term whose definition you could not trace to
+  a type, table or route is a term you inferred; put it in open questions instead. An invented
+  definition propagates into every doc written after it.
 - **Unit docs link here and never restate.** `map` cites `../../system.md` for a convention; a unit
   doc that re-explains the layering is the duplication this file exists to kill.

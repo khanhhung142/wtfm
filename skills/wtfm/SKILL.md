@@ -1,6 +1,6 @@
 ---
 name: wtfm
-description: "Write The Fine Manual. Read an unfamiliar codebase in stages and write documentation another agent can navigate — chunked, indexed, every claim carrying a file:line citation — plus diagrams, plain-language explainers for humans, and an AGENTS.md that makes future agents read it first. Runs itself from a goal and a ledger, fanning work out across subagents, and resumes where it stopped when a session dies. Use when landing in a new or undocumented project, documenting a repo or service, tracing a cross-service flow, explaining how a system works, drawing architecture or sequence diagrams, setting up a docs vault, resuming a half-finished documentation run, or checking whether existing docs still match the code. Trigger words: onboard, document this project, write docs for agents, code map, architecture diagram, explain this system, tech stack, coding conventions, layer architecture, docs vault, docs-first, RTFM."
+description: "Write The Fine Manual. Read an unfamiliar codebase in stages and write documentation another agent can navigate — chunked, indexed, every claim carrying a file:line citation — plus diagrams, plain-language explainers for humans, and an AGENTS.md that makes future agents read it first. Runs itself from a goal and a ledger, fanning work out across subagents, and resumes where it stopped when a session dies. Use when landing in a new or undocumented project, documenting a repo or service, tracing a cross-service flow, explaining how a system works, drawing architecture or sequence diagrams, setting up a docs vault, recording an architecture decision, building a domain glossary, resuming a half-finished documentation run, or checking whether existing docs still match the code. Trigger words: onboard, document this project, write docs for agents, code map, architecture diagram, explain this system, tech stack, coding conventions, layer architecture, docs vault, docs-first, ADR, architecture decision record, why did we build it this way, glossary, domain vocabulary, ubiquitous language, RTFM."
 ---
 
 # wtfm — Write The Fine Manual
@@ -10,6 +10,12 @@ question, reachable through a router index, every claim carrying a `file:line` c
 
 The reader is an agent that arrives next week with no context and a budget of three file reads.
 Optimise for it. Humans are served by `explain`, a different artifact with different rules.
+
+**The code is the truth. This manual is the index to it, and the record of why it is that way.**
+It exists to get the next agent to the right forty lines in one read instead of forty, and to tell
+it the things no file can say — what was considered instead, and what the project's words mean.
+A manual that competes with the code for authority is worse than no manual, because now there are
+two answers and the reader cannot tell which one shipped.
 
 ## First move
 
@@ -22,6 +28,7 @@ Find the row that matches what was asked. Do that, and nothing else.
 | One repo, service or package documented | `map <unit>` | [map.md](references/map.md) |
 | One request traced across units | `flow <name>` | [flow.md](references/flow.md) |
 | How something works, explained to a person | `explain <topic>` | [explain.md](references/explain.md) |
+| Why the code is like this, recorded | `decide <topic>` | [decide.md](references/decide.md) |
 | Whether the docs still match the code | `verify` | [verify.md](references/verify.md) |
 | To change the objective or scope of a run | edit `_goal.md` | [run.md](references/run.md) |
 
@@ -46,15 +53,22 @@ spending it reading a repo kills the run halfway. **You dispatch, review and ban
    record. → [run.md](references/run.md)
 3. **Bootstrap.** Create the skeleton, seed `_goal.md` and `_progress.md`, wire in `AGENTS.md`.
    → [bootstrap.md](references/bootstrap.md)
-4. **System.** One session: stack, shape, layers, conventions, for the whole repo. Everything after
-   it links to it instead of restating it. → [system.md](references/system.md)
+4. **System.** One session: stack, shape, layers, conventions for the whole repo, plus
+   `glossary.md` — what this project's words mean. Everything after it links to both instead of
+   restating them. → [system.md](references/system.md)
 5. **First unit.** `map` exactly one, alone. → [map.md](references/map.md)
 6. **Gate 2.** Present it as a *template*, not as content. Ask what is missing that every future doc
    will also miss, and what is noise about to be repeated sixty times. Apply the answer before wave
    three, because this is the last cheap moment to fix it.
 7. **Remaining units**, three to five per wave, in parallel.
 8. **Flows**, in parallel, once every unit a flow crosses is mapped.
-9. **Explainers**, then **verify** as a single final pass.
+9. **Explainers**, in parallel.
+10. **Decisions.** One session over the answered open questions and the git archaeology, then ask
+    the human what is still missing. → [decide.md](references/decide.md)
+11. **Verify** as a single final pass.
+
+A run that ends with an empty `decisions/` folder documented the code and threw away the reasoning,
+which was the half the code could not state for itself. Stage 10 is not optional padding.
 
 Stop when `_goal.md` says done. Report what was written and what is still open.
 
@@ -123,10 +137,59 @@ Never promote a `🔄` row to done because its folder exists. It was never revie
 
 ## Rules every stage obeys
 
-**Cite or omit.** Every technical claim names `path/file.ext:LINE`, repo-relative. A claim you could
-not trace to a line goes in `## Open questions`, not in the doc. This is what makes the manual worth
-more than the next model's guess: a citation is confirmed in one read, where an uncited paragraph
-costs exactly what it cost before the doc existed.
+**Code is the truth. The manual is the index and the why.** Two rules follow from that, and they are
+the ones that keep this manual from becoming the thing it was written to replace:
+
+- *Where a doc and the code disagree, the code is right and the doc is a bug.* Never reword the code
+  to match the doc, never split the difference, never pick whichever reads better. Fix the doc, or
+  file it as a `verify` finding when you are not in a session that may write there.
+- *Do not restate what a file already states.* A table you could regenerate with a script is a table
+  that will be wrong by Thursday and believed anyway. Point at the authored file and spend the words
+  on what reading it will not tell you: which of those rows is a stub, which one is load-bearing,
+  which one is a trap.
+
+What survives that test is the manual's actual job: navigation (where is this), constraints (what
+must not be broken), vocabulary (what the words mean here), and decisions (why, and what lost).
+
+**Write the slow half.** Every claim has a decay rate, and you choose which ones to make. A doc built
+from fast-decaying claims needs verifying forever; one built from slow-decaying claims barely needs
+verifying at all. Same unit, same session, different half-life — the difference is what you chose to
+write down.
+
+| Claim | Rots when | What it costs you |
+|---|---|---|
+| A line number | anything above it is edited | a check every commit |
+| A behaviour paraphrase | the logic changes | a check every feature |
+| A surface list | a route or table is added | a check every feature |
+| A symbol or path | a rename or a refactor | a check a quarter |
+| An invariant or a trap | the *design* changes | almost never — and then it is a finding worth having |
+| A word's meaning | the domain is renamed | almost never |
+| A decision | never; it gets superseded | never |
+
+Prefer the bottom of that table. Where the top is genuinely what the reader needs — the surface
+really is scattered, the entry point really is a line — write it, but know you have just bought
+maintenance, and buy the least precision that still gets the reader there. `internal/http/` is a
+better citation than `internal/http/order.go:23 Create` when the point is where handlers live.
+
+**A fact about one file belongs in that file.** A comment on the ORM hook moves with the hook, is
+reviewed in the same pull request by the same person, and cannot drift from it — the manual can do
+none of those three. So when a trap is local, write the comment and have the doc link to it. Keep
+the manual for what no single file can own: what spans files, what the words mean, what was
+rejected. That is not a smaller manual by accident. It is a manual with nothing in it that rots
+faster than the reason it was written.
+
+**Cite or omit, and cite an anchor with the line.** Every technical claim names
+`path/file.ext:LINE Symbol`, repo-relative — `internal/user/register.go:34 Register`. A claim you
+could not trace goes in `## Open questions`, not in the doc. This is what makes the manual worth more
+than the next model's guess: a citation is confirmed in one read, where an uncited paragraph costs
+exactly what it cost before the doc existed.
+
+The anchor is what stops the manual rotting one line at a time. A bare line number is wrong the
+moment somebody inserts twelve lines above it — every citation in the file breaks at once, and none
+of them look broken. A symbol survives that, breaks only on a rename, and lets `verify` repair the
+number with one `grep`. Use the nearest named thing: a function, type, table, route constant, config
+key. Where nothing is named — a migration body, a YAML block — anchor on the literal that identifies
+it, and say so.
 
 **Document the authored file, not what it generates.** Generated output restates the same fact one
 step later and goes stale silently. `_scout.md` lists which is which for this project.

@@ -4,13 +4,13 @@
     "name": "hung.phan"
   },
   "metadata": {
-    "description": "Write The Fine Manual — documentation skills for agents landing in an unfamiliar codebase."
+    "description": "Write The Fine Manual \u2014 documentation skills for agents landing in an unfamiliar codebase. Docs as the index to the code, never a rival source of truth."
   },
   "plugins": [
     {
       "name": "wtfm",
       "source": "./",
-      "description": "You cannot RTFM when there is no FM. Reads an unfamiliar codebase in stages and writes the manual: chunked, indexed, citation-backed docs, diagrams and human explainers. Self-driving via subagents, resumable after a dead session."
+      "description": "Write The Fine Manual. Lands in an undocumented codebase and produces chunked, indexed, citation-backed docs another agent can navigate \u2014 an index to the code rather than a second source of truth that drifts from it, plus the two things code cannot state: a domain glossary and numbered decision records. Also diagrams, human explainers, a drift check, and an AGENTS.md that makes future agents read the manual first and the code second. Self-driving: fans work out across subagents from a goal and a ledger, and resumes after a dead session."
     }
   ]
 }

@@ -53,7 +53,7 @@ sequenceDiagram
 
 | # | Unit | Function | File:line | Does | Reads / writes | Next |
 |---|------|----------|-----------|------|----------------|------|
-| 1 | api | `SessionHandler.Create` | `internal/http/session.go:41` | validate body, rate-limit by email | redis `login:fail:*` | 2 |
+| 1 | api | `SessionHandler.Create` | `internal/http/session.go:41 Create` | validate body, rate-limit by email | redis `login:fail:*` | 2 |
 
 Every row cites. A hop you could not verify does not get a row; it goes in Open questions.
 

@@ -23,7 +23,7 @@ Settled at gate 1, on <date>. Change a row and the next wave follows it.
 | 4 | Manual location | |
 | 5 | Depth per unit | |
 | 6 | Audience | |
-| 7 | Agent file patched | |
+| 7 | Agent file patched, citation lint installed or declined | |
 
 ## Objective
 One or two lines. What this manual is for, and who reads it.
@@ -47,8 +47,10 @@ Checkable conditions, not adjectives.
 - [ ] `system.md` names the stack, the layers and the conventions, each cited
 - [ ] Every in-scope unit has an index and a use-case table
 - [ ] Every in-scope flow traces end to end with no unverified hop
+- [ ] `glossary.md` covers every term whose meaning is not obvious from the word, each cited
+- [ ] Every answered open question that shaped the code has a `decisions/` file
 - [ ] `verify` reports zero Wrong findings
-- [ ] `AGENTS.md` points at the manual
+- [ ] `AGENTS.md` points at the manual and states that code outranks it
 
 ## Stop
 What ends the run rather than continuing to the next wave: a budget, a date, a wave count.
@@ -67,7 +69,10 @@ The first `map` is deliberately alone. It is the template, and every flaw in it 
 repeated across the rest.
 
 `system` is alone too, and comes before it. It is one session for the whole repo — stack, layers,
-conventions — and every subagent after it is handed those instead of inventing its own set.
+conventions, glossary — and every subagent after it is handed those instead of inventing its own set.
+
+`decide` is alone as well, and comes last, because the open-questions table it harvests is not full
+until the rest of the run has filled it.
 
 ## What to say at the gates
 
@@ -85,7 +90,7 @@ composes. A gate that asks open questions gets a shrug; a gate that proposes ans
 | 4 | Where the manual lives, and whether you may `git commit` it | In-repo for one repo; a sibling folder plus symlinks for several; ask outright for commit permission | Whether the docs may be committed at all |
 | 5 | Depth per unit | Full for units on the request path, sketch for the rest | Which units they are about to work in |
 | 6 | Who reads it | Agents only unless they say otherwise | Whether anyone is being onboarded |
-| 7 | Which agent file to patch | The one that exists, extended not replaced | Whether it is shared with a team |
+| 7 | Which agent file to patch, and whether to install the citation lint | The one that exists, extended not replaced; the lint offered as a pre-commit or CI step, never installed unquietly | Whether it is shared with a team, and what may touch their build |
 
 Present the evidence for each, not just the proposal. "develop has 21 schema files, main has 1" lets
 them correct you in four words. "I will read develop" does not.

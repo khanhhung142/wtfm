@@ -12,7 +12,7 @@ know the technology it leans on. Assume the profession, not the stack.
 | Agent docs | Explainer |
 |---|---|
 | Facts in tables | One idea per section, in order |
-| `file:line` on every claim | Citations at the end, or a link to the flow doc |
+| `file:line Symbol` on every claim | Citations at the end, or a link to the flow doc |
 | Complete | Only the spine, with detours cut |
 | Status tags everywhere | Says plainly what does not exist yet |
 | Sequence diagrams | Flowcharts and drawn data structures |
