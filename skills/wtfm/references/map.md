@@ -12,8 +12,8 @@ means reading logic without knowing what the nouns are.
    you name things the way the rest of the manual does, and record a divergence when this unit
    disagrees rather than inventing a second vocabulary.
 1. **Manifest and build files.** Language, framework versions, codegen commands, what is generated.
-2. **Truth sources for this unit** (from `_scout.md`): interface or schema definitions. This is the
-   unit's contract with everyone else, and the contract is the spine of the doc.
+2. **Authored sources for this unit** (from `_scout.md`): interfaces, schemas and approved specs.
+   Keep their authority separate: code shows implementation, while an approved spec states intent.
 3. **Persistence definitions.** Tables, collections, indexes, migrations.
 4. **Wiring.** The container, context or module that lists the unit's dependencies: databases,
    caches, clients of other units, queues. One file usually enumerates everything this unit can
@@ -27,23 +27,23 @@ means reading logic without knowing what the nouns are.
 
 ## Files to write
 
-Adapt the set to the unit. A backend service earns all of these; a UI unit swaps `data`/`api` for
-routes and state; a library gets `index` plus one file per exported area. Write the file when the
-unit has that surface, and skip it when it does not.
+Start with the smallest useful set. Every unit gets `index.md`; add `pitfalls.md` only when there
+are verified cross-file invariants, implicit behaviour or dangerous exceptions. Create a topic file
+only when the index would otherwise need to answer a distinct recurring question. A backend service
+does not earn seven files merely by existing.
 
 | File | Contents |
 |------|----------|
-| `index.md` | Router for this unit, plus the quick-facts table. Written first, updated last |
-| `service.md` | Purpose, what it owns, what is generated versus hand-written. Repo-wide versions and conventions are in `system.md`: link, do not repeat |
-| `architecture.md` | Startup sequence, dependencies, middleware chain, stores. One component diagram |
-| `layers.md` | The request path, and the use-case table below. The unit's code index |
-| `data.md` | Where the schema is defined, then what reading it will not tell you: tenancy, soft delete, which writes must share a transaction |
-| `api.md` | Where the surface is defined, then the exceptions: which routes skip auth, which are stubs, which are load-bearing |
-| `events.md` | Queue in and out, scheduled jobs, or "none, synchronous only" when that is true and verified |
-| `config.md` | Where the template is, then only the keys with a failure mode worth naming |
+| `index.md` | Router: ownership, entry points, boundaries, relevant specs/ADRs/flows, and where to read next |
+| `pitfalls.md` | Only verified traps and invariants that no single source file can own |
+| `architecture.md` | Only when startup or wiring spans files and is not obvious from the entry point |
+| `data.md` | Only for cross-table invariants, tenancy, soft delete or transaction boundaries |
+| `api.md` | Only when the surface is scattered or has exceptions not visible at registration |
+| `events.md` | Only when async boundaries, retry or ordering need a map |
+| `config.md` | Only keys with non-obvious operational failure modes |
 
-`index.md` quick facts: what the unit owns, branch and commit read, entry point, count of endpoints
-and tables, dependencies in and out, status tag counts.
+`index.md` records what the unit owns, branch and commit read, entry points and dependencies in and
+out. Do not copy endpoint, table or config counts that a command can derive.
 
 ## The derivable test
 
@@ -63,8 +63,8 @@ shape, and the middle part is conditional:
 3. **The traps.** What the authoritative file does not say. Always written, and always the reason
    the doc earns its place.
 
-**A locator table carries addresses, never payloads.** `POST /orders → internal/http/order.go:23
-Create, auth: member, 🟡` is a locator: it survives a field being added to the request body, and it
+**A locator table carries addresses, never payloads.** `POST /orders →
+internal/http/order.go#Create, auth: member, 🟡` is a locator: it survives a field being added to the request body, and it
 takes a reader somewhere. Reproducing that request body is a payload: it is the schema restated one
 step later, it goes stale the first time somebody adds a field, and it saves the reader a read they
 should be doing anyway.
@@ -87,15 +87,14 @@ A trap is a claim about behaviour, and behaviour changes. End each one with what
 
 ```markdown
 - **`POST /orders/:id/refund` skips the auth middleware.** Registered on the bare mux at
-  `internal/http/router.go:71 Register`, deliberate — see [decisions/04](../../decisions/04-...md).
-  Guarded by: `internal/http/refund_test.go:88 TestRefundRejectsUnsignedBody`
+  `internal/http/router.go#Register`, deliberate — see [decisions/04](../../decisions/04-...md).
+  Guarded by: `internal/http/refund_test.go#TestRefundRejectsUnsignedBody`
 - **Every handler here is tenant-scoped by an ORM hook**, not by its own query.
   Guarded by: nothing — a raw query bypasses it silently.
 ```
 
-`Guarded by: <test>` means a machine already checks this, every CI run, forever. That claim does not
-need a documentation pass to stay true: if it stops being true, the build goes red and somebody fixes
-one or the other the same afternoon.
+`Guarded by: <test>` is evidence that a test appears to exercise the claim. It is not a guarantee:
+the test may be weak, skipped or absent from CI. Record the CI job too when verified.
 
 `Guarded by: nothing` is the useful half. It marks a claim that can quietly become false with nothing
 anywhere objecting — and those are exactly the claims a `verify` session should spend its reading on.
@@ -107,11 +106,12 @@ Search for the guard before you write `nothing`. A trap you cannot find a test f
 
 ## The use-case table
 
-The most-read table in the manual. One row per unit of behaviour.
+Use this table only when behaviour is scattered and agents repeatedly need a locator. Do not create
+it when an authored route, command or RPC registry already provides the same index.
 
 | Use case | Endpoint | Entry | Does | Touches | Calls out | Status |
 |----------|----------|-------|------|---------|-----------|--------|
-| Register user | `POST /users` | `internal/user/register.go:34 Register` | validate, dedupe, write user + profile in one transaction, emit `user.created` | `users`, `profiles` | `id-service.Next` | ✅ |
+| Register user | `POST /users` | `internal/user/register.go#Register` | validate, dedupe, write user + profile in one transaction, emit `user.created` | `users`, `profiles` | `id-service.Next` | ✅ |
 
 **Does** is one line, and its only job is to let a reader pick this row out of forty. It names the
 shape — what gets touched, and what ordering matters — and then stops. It is not the doc comment,

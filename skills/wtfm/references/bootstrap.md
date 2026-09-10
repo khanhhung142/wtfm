@@ -40,8 +40,9 @@ only once decision 4 at gate 1 has put the manual in that repo.
 ├── system.md         # stack, shape, layers, conventions. The whole repo, above any unit
 ├── glossary.md       # what this project's words mean. What code cannot say, part one
 ├── _goal.md          # objective, scope, definition of done. The human owns this
-├── _scout.md         # written by scout; the truth-source table lives here
+├── _scout.md         # written by scout; the authored-source map lives here
 ├── _progress.md      # the ledger
+├── specs/            # links or approved intent docs; never inferred by wtfm
 ├── services/<unit>/  # one folder per unit, each with its own index.md
 ├── flows/            # cross-unit traces
 ├── explain/          # human-facing explainers
@@ -62,17 +63,18 @@ The router. It is read on every session by every agent, so it stays a table.
 **Agents: read this file first, then read the code it points you at.** Written by the `wtfm` skill.
 Open only what the task needs.
 
-**The code is the truth. This manual is the index to it, and the record of why it is that way.** It
-gets you to the right file in one read instead of twenty. It does not replace opening that file, and
-where the two disagree, the code is right and the doc is a bug — fix the doc, never the reading.
+**Authority follows the question.** Code at the recorded revision shows implementation; an approved
+spec states intent; ADRs preserve rationale; the glossary records domain language; this index only
+navigates. When sources disagree, record the drift instead of blending their answers.
 
 | Need | Path |
 |------|------|
 | What this manual is for, and when it is done | [_goal.md](_goal.md) |
 | What is already documented, what is next | [_progress.md](_progress.md) |
-| Units, branches, truth sources, vocabulary | [_scout.md](_scout.md) |
+| Units, branches, authored sources, vocabulary | [_scout.md](_scout.md) |
 | Stack, layers, conventions of this repo | [system.md](system.md) |
 | What a word means in this project | [glossary.md](glossary.md) |
+| What the system is intended to do | `specs/` |
 | One unit's internals | `services/<unit>/index.md` |
 | A request end to end | `flows/<name>.md` |
 | Plain-language walkthrough | `explain/<topic>.md` |
@@ -87,11 +89,12 @@ where the two disagree, the code is right and the doc is a bug — fix the doc, 
 `✅ implemented` · `🟡 partial` · `📋 spec-only`. Untagged means unfinished doc.
 
 ## Rules for agents
-1. Code wins. A doc that contradicts the code is a bug in the doc — fix it or file it, never the
-   other way round.
-2. Cite `file:line Symbol` for every technical claim — the line to jump to, the symbol to find it
-   again after the line moves.
-3. Truth sources are in [_scout.md](_scout.md). Generated output is not documentation input.
+1. Match authority to the question. Implementation docs lose to code; approved specs define intent.
+   A conflict between spec and code is drift, not permission to silently rewrite either.
+2. Link technical navigation claims by path and stable anchor, for example
+   `internal/user/register.go#Register`; line numbers are optional jump hints.
+3. Authored sources and their authority are in [_scout.md](_scout.md). Generated output is not
+   documentation input.
 4. Never copy a table between docs. Link it. Never restate what an authored file already says —
    point at it.
 5. Conventions and layer names live in [system.md](system.md), the project's words in
@@ -106,7 +109,7 @@ where the two disagree, the code is right and the doc is a bug — fix the doc, 
 **Read first, update last.** No session holds the whole project. This file is the handoff.
 
 `—` not started · `🔄` claimed · `✅` done · `⛔` blocked, say by what.
-Done means written **and** citations verified, not "the file exists".
+Done means written, links resolved and sampled claims verified, not "the file exists".
 
 **A `🔄` you are reading is a crash survivor.** Nothing is running. Check the folder on disk and
 either dispatch it fresh, extend it, or spot-check and bank it.
@@ -123,6 +126,7 @@ either dispatch it fresh, extend it, or spot-check and bank it.
 |-----|--------|-------|
 | system.md | — | |
 | glossary.md | — | |
+| specs/ inventory | — | approved intent only |
 
 ## Units
 | Unit | Wave | index | service | data | api | events | config | Branch @ commit | Notes |
@@ -160,12 +164,13 @@ loaded on every turn of every session forever. Extend the existing file rather t
 ````markdown
 ## The manual
 
-`<manual>/` is an index to this codebase, not a copy of it. **The code is the truth.** The manual
-exists to get you to the right file in one read instead of twenty, and to tell you the two things no
-file can: what the words mean here, and why the code is like this.
+`<manual>/` is an index to this codebase, not a copy of it. Authority follows the question: code at
+the recorded revision shows implementation; approved specs state intent; ADRs preserve rationale;
+the glossary records domain language; indexes only navigate.
 
-**Where a doc and the code disagree, the code is right.** Do not average them, do not prefer the one
-that reads better, and never change code to match a doc. Fix the doc, or record it as a finding.
+Where implementation documentation and code disagree, fix the documentation. Where an approved
+spec and code disagree, record implementation drift. Never average conflicting sources or silently
+change one to match the other.
 
 Before coding, debugging, or answering an architecture question:
 
@@ -178,6 +183,7 @@ Before coding, debugging, or answering an architecture question:
 |------|------|
 | One unit's internals | `<manual>/services/<unit>/index.md` |
 | A request end to end | `<manual>/flows/<name>.md` |
+| Intended behaviour | `<manual>/specs/` |
 | What a word means here | `<manual>/glossary.md` |
 | Why the code is like this, and what was rejected | `<manual>/decisions/` |
 
@@ -188,28 +194,29 @@ the code has moved since:
 git log --oneline <doc-commit>..HEAD -- <unit path> | wc -l
 ```
 
-`0` — citations resolve, act on them. A handful — paths hold, line numbers are suspect, so jump by
-the symbol in the citation rather than the number. Many — read the doc as a map of where to look,
-not as a statement of fact, and confirm in the file before you quote it. A doc is wrong about
-details long before it is wrong about where things live, which is why an old one is still worth
-opening.
+`0` — the doc describes the recorded revision; confirm critical claims in code. A handful — use it
+as a map and inspect changed areas. Many, or a rename — treat it only as a navigation hypothesis.
+An old doc may still point toward useful code, but age never grants behavioural authority.
 
-Truth sources are listed in `<manual>/_scout.md`. Cite `file:line Symbol` for technical claims. Docs are
-written by the `wtfm` skill; write new ones with it rather than by hand — and before you propose an
-architectural change, check `decisions/` for whether it was already tried.
+Authored sources and their authority are listed in `<manual>/_scout.md`. Link technical navigation
+claims by path and stable symbol. Docs are written by the `wtfm` skill; write new ones with it rather
+than by hand — and before you propose an architectural change, check `decisions/` for whether it was
+already tried.
 ````
 
 ## Rules
 
 - Bootstrap writes structure, never content. Empty tables and headings are correct output here.
   A skeleton with invented rows is worse than an empty one, because the invention gets believed.
+- `specs/` contains only documents explicitly approved as intent, or links to where those documents
+  already live. Never promote an existing README or explainer to spec by inference.
 - Seed `_progress.md` unit rows from `_scout.md`, all `—`. That list is what `run` consumes.
 - Seed `_goal.md` from the seven gate-1 decisions, including the ones the human did not contest.
   It is the decision record, and a decision nobody wrote down becomes a habit nobody can question.
 - If an `AGENTS.md` or `CLAUDE.md` already exists, insert the docs-first section and leave the rest
   untouched. Say in the report which file was edited and what was added.
-- **Offer the citation lint, do not install it.** `check-citations.sh` — the script in
-  [verify.md](verify.md) — turns every stale citation into a build failure the day it happens, which
-  is most of what `verify` would otherwise be for. It is also a file in somebody's repository and
-  possibly a step in their CI, so it is theirs to accept. Ask once, at gate 1 alongside the commit
-  question, and say plainly what it would add and where it would run.
+- **Offer the link lint, do not install it.** `check-citations.sh` — the script in
+  [verify.md](verify.md) — catches missing `path#Symbol` addresses, not semantic drift. It is also a
+  file in somebody's repository and possibly a step in their CI, so it is theirs to accept. Ask
+  once, at gate 1 alongside the commit question, and say plainly what it would add and where it
+  would run.

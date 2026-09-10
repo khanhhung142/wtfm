@@ -1,8 +1,8 @@
 # Command: flow — one request end to end → `flows/<name>.md`
 
 For behaviour that crosses units: a login, a message send, a checkout, an export. This is the doc
-someone opens at 03:00 while the thing is broken. It has to let them follow one request from client
-to storage without opening the code, and hand them exact coordinates the moment they do.
+someone opens at 03:00 while the thing is broken. It orients them across boundaries and identifies
+the minimum code needed to verify or change the flow.
 
 Run only after every unit the flow crosses has been mapped. A flow written across an undocumented
 unit guesses at that hop, and a guessed hop is indistinguishable from a real one once written down.
@@ -11,7 +11,7 @@ unit guesses at that hop, and a guessed hop is indistinguishable from a real one
 
 1. Find the entry point: the route, the RPC, the consumed message. Grep the handler name across all
    units.
-2. Walk hop by hop. At each hop record file, line, function, what it decides, what it writes, what
+2. Walk hop by hop. At each hop record file, stable symbol, what it decides, what it writes, what
    it calls next. Follow into the callee unit. Stop at storage, cache or an external system.
 3. **Every branch that changes the outcome is a hop**: a permission denial, an error return, a
    retry, an async fork.
@@ -22,6 +22,8 @@ unit guesses at that hop, and a guessed hop is indistinguishable from a real one
 
 ````markdown
 ---
+kind: map
+authority: implementation-evidence
 flow: <name>
 units: <unit>, <unit>
 branch: <branch> @ <commit>
@@ -51,9 +53,9 @@ sequenceDiagram
 
 ## Hops
 
-| # | Unit | Function | File:line | Does | Reads / writes | Next |
+| # | Unit | Function | Code | Does | Reads / writes | Next |
 |---|------|----------|-----------|------|----------------|------|
-| 1 | api | `SessionHandler.Create` | `internal/http/session.go:41 Create` | validate body, rate-limit by email | redis `login:fail:*` | 2 |
+| 1 | api | `SessionHandler.Create` | `internal/http/session.go#Create` | validate body, rate-limit by email | redis `login:fail:*` | 2 |
 
 Every row cites. A hop you could not verify does not get a row; it goes in Open questions.
 
@@ -75,7 +77,6 @@ Include transaction boundaries: what rolls back, and what has already escaped wh
 - One flow, one file. Never bundle "the chat flows" into one document.
 - Async hops are drawn dashed and labelled `async`. The reader must be able to see the point where
   the response returns before the work has finished, because that gap is where the bugs live.
-- Re-verify line numbers immediately before writing. A stale citation is worse than none, since it
-  costs a read and then teaches the reader to distrust the rest.
+- Prefer path plus stable symbol. Add line numbers only as disposable jump hints.
 - Link the unit docs for detail rather than restating their tables.
 - Read [references/diagrams.md](diagrams.md) first.

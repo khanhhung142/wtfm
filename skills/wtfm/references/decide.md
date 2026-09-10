@@ -1,8 +1,7 @@
 # Command: decide — record a decision → `decisions/<n>-<slug>.md`
 
-The only doc in the manual that code cannot replace. Everything else in here restates something a
-file already says, more cheaply and in one place; this one holds what no file says and no file ever
-will — what was considered instead, and why it lost.
+The record of why a choice was made. Code shows the option that exists; an ADR preserves the
+alternatives, constraints and rationale only when history or a human can supply them.
 
 A codebase shows the option that won. It never shows the three that were rejected, so every agent
 that arrives later re-proposes one of them. That is the cost this file exists to stop.
@@ -56,10 +55,12 @@ source, and asking three questions is cheaper than fabricating one answer.
 
 ````markdown
 ---
+kind: decision
+authority: rationale
 decision: <short imperative title>
 date: <YYYY-MM-DD, or `unknown` with what bounds it>
 status: accepted | superseded by <file> | reversed | unknown
-confidence: cited | reported | inferred
+confidence: cited | reported
 units: <units this constrains>
 ---
 
@@ -88,7 +89,7 @@ arriving. This is the most useful section in the file, because it turns a histor
 trigger somebody can check.
 
 ## Evidence
-Where each part came from: a commit sha, a PR, `asked <name>, <date>`, or `inferred, unconfirmed`.
+Where each part came from: a commit sha, a PR, or `asked <name>, <date>`.
 ````
 
 ## `confidence`, and why it is a separate field from `status`
@@ -97,11 +98,8 @@ Where each part came from: a commit sha, a PR, `asked <name>, <date>`, or `infer
 |---|---|---|
 | `cited` | Rationale found in commits, comments or code | Stand as written |
 | `reported` | A human said so, and is named with a date | Stand as written |
-| `inferred` | You worked it out from the shape of the code | **Must be confirmed before an agent may act on it** |
-
-An `inferred` ADR is a hypothesis wearing a decision's clothes. Keep it — it is still the best
-starting point anyone has — but never let it lose the label. Promote it only when a human confirms,
-and record who and when.
+Do not write an inferred ADR. A rationale reconstructed from code shape is a hypothesis, so keep it
+as a numbered open question until a human confirms it. Record who confirmed it and when.
 
 ## Rules
 
@@ -111,7 +109,8 @@ and record who and when.
   `superseded by <file>`. The record of having changed your mind is worth more than either decision.
 - **Numbers are permanent.** Unit docs cite `decisions/07`. Renumbering breaks every one of them.
 - **One decision per file.** A file covering three is cited for all three and superseded for none.
-- **No status tags, no `file:line` requirement in the body.** This doc is not describing code. The
-  `Evidence` section carries the coordinates instead.
-- **Harvest the ledger.** Every answered open question that shaped code is an ADR nobody wrote. A run
-  that ends with an empty `decisions/` folder documented a codebase and threw away the reasoning.
+- **No implementation status tags or code-link requirement in the body.** This doc is not
+  describing code. The `Evidence` section carries the coordinates instead.
+- **Harvest the ledger.** An answered open question that shaped code may be an ADR when the answer
+  includes the decision and its rationale. An empty `decisions/` folder is correct when no reliable
+  rationale survives.

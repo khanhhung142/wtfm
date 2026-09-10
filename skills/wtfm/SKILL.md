@@ -1,21 +1,21 @@
 ---
 name: wtfm
-description: "Write The Fine Manual. Read an unfamiliar codebase in stages and write documentation another agent can navigate — chunked, indexed, every claim carrying a file:line citation — plus diagrams, plain-language explainers for humans, and an AGENTS.md that makes future agents read it first. Runs itself from a goal and a ledger, fanning work out across subagents, and resumes where it stopped when a session dies. Use when landing in a new or undocumented project, documenting a repo or service, tracing a cross-service flow, explaining how a system works, drawing architecture or sequence diagrams, setting up a docs vault, recording an architecture decision, building a domain glossary, resuming a half-finished documentation run, or checking whether existing docs still match the code. Trigger words: onboard, document this project, write docs for agents, code map, architecture diagram, explain this system, tech stack, coding conventions, layer architecture, docs vault, docs-first, ADR, architecture decision record, why did we build it this way, glossary, domain vocabulary, ubiquitous language, RTFM."
+description: "Write The Fine Manual. Read an unfamiliar codebase in stages and write a thin manual another agent can navigate — indexes route to code, approved specs state intent, ADRs preserve rationale, and glossaries define domain language. Runs itself from a goal and a ledger, fanning work out across subagents, and resumes where it stopped when a session dies. Use when landing in a new or undocumented project, documenting a repo or service, tracing a cross-service flow, explaining how a system works, drawing architecture or sequence diagrams, setting up a docs vault, recording an architecture decision, building a domain glossary, resuming a half-finished documentation run, or checking whether existing docs still match the code. Trigger words: onboard, document this project, write docs for agents, code map, architecture diagram, explain this system, tech stack, coding conventions, layer architecture, docs vault, docs-first, ADR, architecture decision record, why did we build it this way, glossary, domain vocabulary, ubiquitous language, RTFM."
 ---
 
 # wtfm — Write The Fine Manual
 
-You cannot RTFM when there is no FM. This skill writes it: many small files, each answering one
-question, reachable through a router index, every claim carrying a `file:line` citation.
+You cannot RTFM when there is no FM. This skill writes a thin manual: small files, each answering
+one question, reachable through a router index, with technical observations linked to code.
 
 The reader is an agent that arrives next week with no context and a budget of three file reads.
 Optimise for it. Humans are served by `explain`, a different artifact with different rules.
 
-**The code is the truth. This manual is the index to it, and the record of why it is that way.**
-It exists to get the next agent to the right forty lines in one read instead of forty, and to tell
-it the things no file can say — what was considered instead, and what the project's words mean.
-A manual that competes with the code for authority is worse than no manual, because now there are
-two answers and the reader cannot tell which one shipped.
+**Authority follows the question.** The code at the recorded revision shows the implementation;
+an approved spec states intended behaviour; ADRs preserve why; the glossary records domain
+language; indexes only navigate. When two disagree, record the drift instead of blending them.
+The manual exists to get the next agent to the right forty lines in one read instead of forty, not
+to save it from opening those lines.
 
 ## First move
 
@@ -53,9 +53,9 @@ spending it reading a repo kills the run halfway. **You dispatch, review and ban
    record. → [run.md](references/run.md)
 3. **Bootstrap.** Create the skeleton, seed `_goal.md` and `_progress.md`, wire in `AGENTS.md`.
    → [bootstrap.md](references/bootstrap.md)
-4. **System.** One session: stack, shape, layers, conventions for the whole repo, plus
-   `glossary.md` — what this project's words mean. Everything after it links to both instead of
-   restating them. → [system.md](references/system.md)
+4. **System.** One session: stack, shape, layers, conventions for the whole repo, `glossary.md`,
+   and a router at `specs/index.md` for explicitly approved intent. Everything after it links to
+   these instead of restating them. → [system.md](references/system.md)
 5. **First unit.** `map` exactly one, alone. → [map.md](references/map.md)
 6. **Gate 2.** Present it as a *template*, not as content. Ask what is missing that every future doc
    will also miss, and what is noise about to be repeated sixty times. Apply the answer before wave
@@ -63,12 +63,13 @@ spending it reading a repo kills the run halfway. **You dispatch, review and ban
 7. **Remaining units**, three to five per wave, in parallel.
 8. **Flows**, in parallel, once every unit a flow crosses is mapped.
 9. **Explainers**, in parallel.
-10. **Decisions.** One session over the answered open questions and the git archaeology, then ask
-    the human what is still missing. → [decide.md](references/decide.md)
+10. **Decisions, if evidenced.** One session over answered open questions and git archaeology.
+    Write only decisions supported by history or confirmed by a human; leave unknown rationale as
+    open questions. → [decide.md](references/decide.md)
 11. **Verify** as a single final pass.
 
-A run that ends with an empty `decisions/` folder documented the code and threw away the reasoning,
-which was the half the code could not state for itself. Stage 10 is not optional padding.
+An empty `decisions/` folder is valid when no rationale survived and nobody can confirm it.
+Fabricating a reason is worse than recording that it is unknown.
 
 Stop when `_goal.md` says done. Report what was written and what is still open.
 
@@ -79,7 +80,7 @@ One subagent per target. The prompt carries no project knowledge, because `_scou
 ```
 Use the wtfm skill, mode `map`, target `<unit>`.
 
-Read <manual>/_scout.md first for the truth-source table and the branch decision,
+Read <manual>/_scout.md first for the authored-source map and the branch decision,
 <manual>/system.md for the layers and conventions this repo already follows, then
 <manual>/_progress.md for what already exists. Link to system.md for a convention; never restate it.
 
@@ -100,8 +101,8 @@ Four rules stop a fan-out corrupting the manual:
    survive the crash it exists for.
 3. **Bank each report the moment it lands**, not at the end of the wave. Whatever is unbanked when
    the session dies is lost.
-4. **Spot-check one citation per report** before banking. A subagent that fabricated one fabricated
-   others, and citations holding is the whole point.
+4. **Spot-check one navigation claim per report** before banking. If one path or symbol was
+   fabricated, inspect the rest before accepting the report.
 
 Banking a report means: add the unit's row to the root `index.md`, flip its ledger cells, merge its
 open questions into the numbered table, rewrite `## Now`. Then commit the manual if it is in git *and* the human authorised commits.
@@ -112,7 +113,7 @@ One commit per wave is a restore point — only if the human authorised commits 
 | File | Holds | Owner | Changes |
 |---|---|---|---|
 | `_goal.md` | Objective, scope, depth, definition of done | the human | rarely |
-| `_scout.md` | Units, branches, truth sources, vocabulary | scout | once |
+| `_scout.md` | Units, branches, authored sources, vocabulary | scout | once |
 | `_progress.md` | Where the work got to. The ledger | the run | every target |
 
 The goal stays out of the ledger so the human can steer between waves without interrupting a
@@ -131,22 +132,29 @@ against the filesystem before dispatching anything new:
 |---|---|
 | Folder missing | Dispatch fresh |
 | Folder partial | Dispatch to extend, not rewrite |
-| Folder looks complete | Spot-check one citation, then bank |
+| Folder looks complete | Spot-check one navigation claim, then bank |
 
 Never promote a `🔄` row to done because its folder exists. It was never reviewed.
 
 ## Rules every stage obeys
 
-**Code is the truth. The manual is the index and the why.** Two rules follow from that, and they are
-the ones that keep this manual from becoming the thing it was written to replace:
+**Authority follows the question.** Never use the phrase "source of truth" without naming what it is
+authoritative for:
 
-- *Where a doc and the code disagree, the code is right and the doc is a bug.* Never reword the code
-  to match the doc, never split the difference, never pick whichever reads better. Fix the doc, or
-  file it as a `verify` finding when you are not in a session that may write there.
-- *Do not restate what a file already states.* A table you could regenerate with a script is a table
-  that will be wrong by Thursday and believed anyway. Point at the authored file and spend the words
-  on what reading it will not tell you: which of those rows is a stub, which one is load-bearing,
-  which one is a trap.
+- Code, checked-in config and migrations at the recorded revision are evidence of implementation.
+  They do not prove what is deployed now.
+- An explicitly approved spec is authoritative for intent, not for what currently runs.
+- An ADR records a decision and its rationale at a moment in time.
+- A glossary records domain language, with its provenance.
+- An index has no behavioural authority. It only routes a reader.
+
+Where implementation documentation and code disagree, the documentation is wrong. Where an
+approved spec and code disagree, that is implementation drift: record both without silently
+changing either. Never average conflicting sources or infer working behaviour from a spec.
+
+**Do not restate what a file already states.** A table a script could regenerate will be wrong by
+Thursday and believed anyway. Point at the authored file and spend the words on what reading it
+will not tell you: which part is a stub, which invariant spans files, and which trap is implicit.
 
 What survives that test is the manual's actual job: navigation (where is this), constraints (what
 must not be broken), vocabulary (what the words mean here), and decisions (why, and what lost).
@@ -166,10 +174,9 @@ write down.
 | A word's meaning | the domain is renamed | almost never |
 | A decision | never; it gets superseded | never |
 
-Prefer the bottom of that table. Where the top is genuinely what the reader needs — the surface
-really is scattered, the entry point really is a line — write it, but know you have just bought
-maintenance, and buy the least precision that still gets the reader there. `internal/http/` is a
-better citation than `internal/http/order.go:23 Create` when the point is where handlers live.
+Prefer the bottom of that table. Cite the least precision that gets the reader there:
+`internal/http/`, `internal/http/order.go`, or `internal/http/order.go#Create`. Add a line number
+only as a generated or easily repaired convenience, never as the identity of the citation.
 
 **A fact about one file belongs in that file.** A comment on the ORM hook moves with the hook, is
 reviewed in the same pull request by the same person, and cannot drift from it — the manual can do
@@ -178,18 +185,11 @@ the manual for what no single file can own: what spans files, what the words mea
 rejected. That is not a smaller manual by accident. It is a manual with nothing in it that rots
 faster than the reason it was written.
 
-**Cite or omit, and cite an anchor with the line.** Every technical claim names
-`path/file.ext:LINE Symbol`, repo-relative — `internal/user/register.go:34 Register`. A claim you
-could not trace goes in `## Open questions`, not in the doc. This is what makes the manual worth more
-than the next model's guess: a citation is confirmed in one read, where an uncited paragraph costs
-exactly what it cost before the doc existed.
-
-The anchor is what stops the manual rotting one line at a time. A bare line number is wrong the
-moment somebody inserts twelve lines above it — every citation in the file breaks at once, and none
-of them look broken. A symbol survives that, breaks only on a rename, and lets `verify` repair the
-number with one `grep`. Use the nearest named thing: a function, type, table, route constant, config
-key. Where nothing is named — a migration body, a YAML block — anchor on the literal that identifies
-it, and say so.
+**Cite navigation claims; do not decorate prose.** A technical observation that sends a reader into
+the code names a repo-relative path and, where useful, a stable anchor:
+`internal/user/register.go#Register`. A claim you could not trace goes in `## Open questions`.
+Use the nearest named function, type, table, route constant or config key. A line number may follow
+as a jump hint, but the path and anchor are the durable citation.
 
 **Document the authored file, not what it generates.** Generated output restates the same fact one
 step later and goes stale silently. `_scout.md` lists which is which for this project.
@@ -217,8 +217,9 @@ git -C <repo> branch -a --sort=-committerdate | head          # no fetch
 git -C <repo> ls-tree -r --name-only <candidate> -- <schema dir> | wc -l
 ```
 
-**Spec contradicting code is a finding.** Record both and name the contradiction. Never silently
-pick whichever makes a tidier doc. That sentence is usually the most valuable one in the manual.
+**Spec contradicting code is a drift finding.** The code records observed implementation; the
+approved spec records intent. Record both, name the revision and approval evidence, and do not call
+either one the other's replacement.
 
 **One fact, one place.** A table lives in one file; everything else links to it. Links run one
 direction, so a reader always knows which way to walk:
@@ -234,6 +235,8 @@ need → path. **The root index stays under 200 lines**, because every agent pay
 
 ```yaml
 ---
+kind: index | map | spec | decision | glossary | explainer
+authority: none | navigation | implementation-evidence | intent | rationale | vocabulary
 unit: <repo or package name>
 branch: <branch>
 commit: <sha>
@@ -251,11 +254,14 @@ write. A doc that reasons on the page is a draft that escaped.
 
 ## Every stage, same shape
 
-1. Read `_scout.md` for truth sources and the branch decision, `_progress.md` for what exists.
+1. Read `_scout.md` for authored sources and the branch decision, `_progress.md` for what exists.
 2. Work on the branch the human named in `_goal.md`. Do not check it out yourself — if the tree is
    on another branch, stop and ask. Record branch and commit.
-3. Read written specs first where they exist, since they name intent the code may have missed.
-   Then read the code.
+3. Choose read order by task:
+   - Current behaviour, debugging or explanation: index → code and tests → spec to compare intent.
+   - Implementing a requirement: approved spec → index → current code and tests.
+   - Architecture change: relevant ADRs → current code → affected specs.
+   Existing prose that is neither an approved spec nor an ADR is a claim to verify, not authority.
 4. Write the doc. Update the router index and the ledger.
 5. Report files written, status tag counts, open questions. Claim a target is documented only for
    the code actually read.

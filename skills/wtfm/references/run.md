@@ -38,19 +38,20 @@ oversight.
 
 ## Depth
 `sketch` — index and use-case table only, for units nobody will touch this quarter.
-`standard` — the full file set.
+`standard` — index plus only the topic files needed for recurring questions or verified traps.
 `deep` — plus flows and an explainer.
 Set per unit where they differ. Most projects have three units that matter and nine that do not.
 
 ## Done when
 Checkable conditions, not adjectives.
-- [ ] `system.md` names the stack, the layers and the conventions, each cited
-- [ ] Every in-scope unit has an index and a use-case table
+- [ ] `system.md` names the stack, layers and conventions, with links to their evidence
+- [ ] Every approved spec in scope is linked from `specs/`; ordinary prose is not promoted
+- [ ] Every in-scope unit has an index; optional topic files exist only where the index is insufficient
 - [ ] Every in-scope flow traces end to end with no unverified hop
-- [ ] `glossary.md` covers every term whose meaning is not obvious from the word, each cited
-- [ ] Every answered open question that shaped the code has a `decisions/` file
+- [ ] `glossary.md` covers every term whose meaning is not obvious from the word, with provenance
+- [ ] Every confirmed decision with reliable rationale has a `decisions/` file
 - [ ] `verify` reports zero Wrong findings
-- [ ] `AGENTS.md` points at the manual and states that code outranks it
+- [ ] `AGENTS.md` points at the manual and states the authority model
 
 ## Stop
 What ends the run rather than continuing to the next wave: a budget, a date, a wave count.
@@ -69,10 +70,12 @@ The first `map` is deliberately alone. It is the template, and every flaw in it 
 repeated across the rest.
 
 `system` is alone too, and comes before it. It is one session for the whole repo — stack, layers,
-conventions, glossary — and every subagent after it is handed those instead of inventing its own set.
+conventions, glossary and approved-spec router — and every subagent after it is handed those instead
+of inventing its own set.
 
-`decide` is alone as well, and comes last, because the open-questions table it harvests is not full
-until the rest of the run has filled it.
+`decide` runs alone and last when evidence or confirmed answers exist, because the open-questions
+table it harvests is not full until the rest of the run has filled it. Skip writing ADRs when there
+is no reliable rationale.
 
 ## What to say at the gates
 

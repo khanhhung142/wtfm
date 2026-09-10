@@ -1,9 +1,8 @@
-# Command: system — the whole repo → `system.md` + `glossary.md`
+# Command: system — the whole repo → `system.md` + `glossary.md` + `specs/index.md`
 
-Two files at the root of the manual, above every unit, written in the same session because they come
-out of the same reading. It answers what a unit doc cannot: what the
-stack is, what shape the code is in, what this project's layer names actually mean, and which rules
-hold in every unit. Written once, early, and read by every later session.
+Three root artifacts, written in the same session because they come from the same broad reading.
+They answer what a unit doc cannot: the stack, the codebase shape, project layer names, shared rules,
+domain vocabulary, and where approved intent lives.
 
 `map` writes `services/<unit>/architecture.md` — one unit's startup and wiring. This is the other
 thing: the project's, and the conventions that outlive any one unit.
@@ -21,8 +20,8 @@ Re-run it only when a convention changes, not per wave.
 
 ## Read order
 
-1. **`_scout.md`.** Units, edges, truth sources, vocabulary. Do not re-derive any of it.
-2. **Manifests and lockfiles**, every unit. Stack and versions, pinned at a `file:line anchor`.
+1. **`_scout.md`.** Units, edges, authored sources, vocabulary. Do not re-derive any of it.
+2. **Manifests and lockfiles**, every unit. Stack and versions, linked by path and stable key.
 3. **Tooling config.** Linter, formatter, type checker, CI workflow, pre-commit, editorconfig. This
    is the only place a convention is enforced rather than merely believed.
 4. **Two units' entry points**, the most and least typical. Layer names are read out of directory
@@ -36,6 +35,8 @@ Stop there. Depth is `map`'s job.
 
 ````markdown
 ---
+kind: map
+authority: implementation-evidence
 unit: <project>
 branch: <branch>
 commit: <sha>
@@ -66,7 +67,7 @@ is about to break.
 | Rule | Example | Enforced by |
 |------|---------|-------------|
 Naming, file layout, error handling, logging, config access, test location and naming, migrations,
-commits. `Enforced by` is a linter rule at `file:line anchor`, a CI step, or `nothing`.
+commits. `Enforced by` is a linter rule linked by path and key, a CI step, or `nothing`.
 
 ## Cross-cutting
 One short section each, only for what exists: configuration, errors, auth, logging, migrations,
@@ -90,6 +91,8 @@ where they become readable by everyone instead of buried in a run artifact.
 
 ````markdown
 ---
+kind: glossary
+authority: vocabulary
 unit: <project>
 branch: <branch>
 commit: <sha>
@@ -98,9 +101,9 @@ written: <YYYY-MM-DD>
 
 # <project> — glossary
 
-| Term | Means here | Does **not** mean | Defined at | Words the project avoids |
+| Term | Means here | Does **not** mean | Provenance | Words the project avoids |
 |------|-----------|-------------------|------------|--------------------------|
-| Order | A basket that has been submitted; unpaid until a Payment attaches | The warehouse's meaning — that is a Shipment | `internal/order/order.go:18 Order` | purchase, cart |
+| Order | A basket that has been submitted; unpaid until a Payment attaches | The warehouse's meaning — that is a Shipment | approved domain spec; observed at `internal/order/order.go#Order` | purchase, cart |
 
 ## Collisions
 One word, two concepts. Name both, name which owns the word, and cite the loser so the next agent
@@ -115,6 +118,18 @@ what to read the others as.
 nothing and buries the three rows that matter. The `Does not mean` column is where the value is: it
 is the misreading somebody has already made.
 
+## `specs/index.md`
+
+A router to explicitly approved intent, never a rewrite of it. Seed it from `_scout.md`:
+Its frontmatter is `kind: index` and `authority: navigation`; linked specs carry intent authority,
+not the router.
+
+| Need | Approved spec | Approval evidence | Scope |
+|------|---------------|-------------------|-------|
+
+If approval cannot be established, list the document under open questions instead. Existing prose,
+READMEs and diagrams do not become specs because they look authoritative.
+
 ## Rules
 
 - **A convention needs three examples and one search for a counter-example.** Two files agreeing is
@@ -126,8 +141,9 @@ is the misreading somebody has already made.
   says `handler`, even when the textbook word is `controller`.
 - **No unit specifics.** Anything true of one unit only belongs in that unit's folder. When it turns
   out two units disagree, that is a `Divergences` row, not a paragraph here.
-- **A glossary row is cited like any other claim.** A term whose definition you could not trace to
-  a type, table or route is a term you inferred; put it in open questions instead. An invented
-  definition propagates into every doc written after it.
+- **Every glossary row names its provenance.** Prefer an approved domain spec or a named domain
+  owner with a date. Code can show where a word is used, but often cannot define its business
+  meaning. Mark code-only definitions `observed`, and put inferred meanings in open questions until
+  a human confirms them.
 - **Unit docs link here and never restate.** `map` cites `../../system.md` for a convention; a unit
   doc that re-explains the layering is the duplication this file exists to kill.

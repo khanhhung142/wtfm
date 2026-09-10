@@ -1,8 +1,9 @@
 # Stage: scout — recon before anything is written
 
-The first landing. Everything later modes assume gets decided here: which units exist, which branch
-is true, what counts as a truth source, what the words mean. Every hour spent here is repaid by
-every subsequent doc; every guess made here is repeated in all of them.
+The first landing. Everything later modes assume gets decided here: which units exist, which
+revision is being inspected, where authored contracts live, and which vocabulary needs human
+confirmation. Every hour spent here is repaid by every subsequent doc; every guess made here is
+repeated in all of them.
 
 **Output is exactly one file: `_scout.md`.** No unit docs, no diagrams, no manual skeleton. Scout
 ends at a human gate, and writing the manual before the plan is approved wastes the gate.
@@ -18,18 +19,18 @@ Cheap and broad first. Stop expanding a branch as soon as it stops answering a q
    a workspace member. Anything with its own manifest or its own Dockerfile is a unit.
 3. **Dependency manifests.** Language, framework, major versions, and which units depend on which.
    The dependency edges are the first draft of the architecture.
-4. **Truth sources.** Find the authored definitions: schema files, interface or API definitions,
-   migrations, route tables, config templates. Find what is generated from them, usually by reading
-   the codegen commands in step 1. Record both columns.
+4. **Authored sources.** Find schema files, interface or API definitions, approved specs,
+   migrations, route tables and config templates. Record what each is authoritative for, and find
+   what is generated from it by reading the codegen commands in step 1.
 5. **Entry points.** `main`, server bootstrap, route registration, job registration, message
    consumers, CLI commands. An entry point that no unit calls is a dead unit; say so.
 6. **Boundaries.** Where do units talk to each other: HTTP, RPC, queue, shared database, shared
    library. Each edge is a candidate flow.
 7. **Tests.** What is covered tells you what the authors considered load-bearing. Test names are the
    cheapest source of domain vocabulary in the repo.
-8. **Existing docs.** Anything already written. Treat as claims to verify, never as facts. Note its
-   last-modified date against the code's, because a doc older than the code it describes is a
-   hypothesis.
+8. **Existing docs.** Classify before trusting: approved spec, ADR, glossary, implementation prose
+   or navigation. Approval matters for specs; historical evidence matters for ADRs; age against the
+   code matters only for implementation prose and navigation.
 
 ## Branch, evidenced not assumed
 
@@ -64,17 +65,17 @@ Three lines. What it does, who uses it, what shape it is (monolith, N services, 
 
 ## Units
 
-| Unit | Path | Language / framework | Branch that is true | Commit | Depends on | Size | Priority |
+| Unit | Path | Language / framework | Branch inspected | Commit | Depends on | Size | Priority |
 |------|------|----------------------|---------------------|--------|------------|------|----------|
 
 Size: rough file count of hand-written source, so waves can be balanced.
 Priority: what a new agent needs first. The unit most other units depend on ranks above the one with
 the most code.
 
-## Truth sources
+## Authored sources
 
-| Question | Truth source | Generated from it, do not cite |
-|---|---|---|
+| Question | Source | Authority | Approval / revision | Generated from it, do not cite |
+|---|---|---|---|---|
 
 ## Boundaries
 
@@ -83,8 +84,8 @@ the most code.
 
 ## Vocabulary
 
-| Term | Means | Also called | Conflict |
-|---|---|---|---|
+| Term | Candidate meaning | Provenance | Also called | Conflict |
+|---|---|---|---|---|
 
 ## Commands
 Build, test, run, codegen. Copy them from the Makefile or scripts rather than inventing them, and
@@ -107,7 +108,8 @@ two names for one concept is correct, what the acronym stands for.
 - **Read only, git included.** Scout runs no `fetch`, no `checkout`, no `switch`, no `commit` — see
   SKILL.md. It does not create the manual and does not fix anything it finds. Whatever branch the
   tree is on is the branch scout reads; the record says which one that was.
-- **Do not read every file.** Scout answers "what is here and what is true", not "how does it work".
+- **Do not read every file.** Scout answers "what is here and where should later work look", not
+  "how does it work".
   Depth is `map`'s job, and a scout that reads deeply runs out of context before it reaches the
   last unit.
 - Everything uncertain goes in Open questions rather than being resolved by assumption. The gate

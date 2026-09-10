@@ -12,7 +12,7 @@ know the technology it leans on. Assume the profession, not the stack.
 | Agent docs | Explainer |
 |---|---|
 | Facts in tables | One idea per section, in order |
-| `file:line Symbol` on every claim | Citations at the end, or a link to the flow doc |
+| `path#Symbol` on navigation claims | Code links at the end, or a link to the flow doc |
 | Complete | Only the spine, with detours cut |
 | Status tags everywhere | Says plainly what does not exist yet |
 | Sequence diagrams | Flowcharts and drawn data structures |
@@ -47,8 +47,8 @@ know the technology it leans on. Assume the profession, not the stack.
 
 ## Rules
 
-- No `file:line` in the body. It breaks the reading rhythm for a reader who is not going to open
-  the file mid-paragraph. Put the coordinates in a closing section, or link the flow doc.
+- No code coordinates in the body. They break the reading rhythm for a reader who is not going to
+  open the file mid-paragraph. Put links in a closing section, or link the flow doc.
 - Define a term the first time it is used, in the sentence that uses it. A reader who has to scroll
   back has stopped reading.
 - Do not restate the unit doc. If the explainer is a paraphrase of a table, delete it: the table was
