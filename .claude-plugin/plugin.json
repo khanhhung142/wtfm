@@ -1,6 +1,6 @@
 {
   "name": "wtfm",
-  "description": "Write The Fine Manual. Lands in an undocumented codebase and produces chunked, indexed, citation-backed docs another agent can navigate \u2014 an index to the code rather than a second source of truth that drifts from it, plus the two things code cannot state: a domain glossary and numbered decision records. Also diagrams, human explainers, a drift check, and an AGENTS.md that makes future agents read the manual first and the code second. Self-driving: fans work out across subagents from a goal and a ledger, and resumes after a dead session.",
+  "description": "Write The Fine Manual. Writes the half of the documentation code cannot write about itself, and refuses the half that goes stale. One rule: a manual that cannot contradict the code never has to be reconciled with it \u2014 so anything derivable from a file in the repo is cited, never copied. What is left is durable by construction: addresses, cross-file invariants, a domain glossary, and numbered decision records. Local traps are written as code comments so they cannot drift. Ships two model-free lints, one for broken citations and one for content that should never have been written. Self-driving: fans work out across subagents from a goal and a ledger, and resumes after a dead session.",
   "version": "0.1.0",
   "author": {
     "name": "hung.phan"
@@ -12,6 +12,7 @@
     "onboarding",
     "codebase",
     "agents",
+    "stale-docs",
     "diagrams",
     "adr",
     "glossary",
